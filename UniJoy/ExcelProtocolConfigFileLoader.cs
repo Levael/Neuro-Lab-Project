@@ -14,7 +14,7 @@ using Params;
 namespace UniJoy
 {
     /// <summary>
-    /// This class is used to read the data from excel protocl file and load it into the GuiInterface.
+    /// This class is used to read the data from excel protocol file and load it into the GuiInterface.
     /// The excel file may contain two sheets of parameters (for the trial) and of functions 
     /// (for the calling functions to analyze response, trajectory creation, etc).
     /// </summary>
@@ -36,7 +36,7 @@ namespace UniJoy
         /// <summary>
         /// Closes the excel application and destroy it's running app.
         /// </summary>
-        public void CloseExcelProtocoConfigFilelLoader()
+        public void CloseExcelProtocolConfigFileLoader()
         {
             _xlApp.Quit();
         }
@@ -69,17 +69,20 @@ namespace UniJoy
             string[,] excelStringValuesArray = Convert2DObjectsTo2DStrings(valueArray);
 
             //vars going to collect all the variables in the excel data with their attributes as dictionary of a 
-            //vraible name and all it's attributes in inner dictionary.
+            //variable name and all it's attributes in inner dictionary.
             variables._variablesDictionary = new Dictionary<string, Variable>();
 
             //collecting all the attributes for each variable (all variables have them).
             string[] attributes = new string[excelStringValuesArray.GetLength(1)];
+            
+            // attributes here are names of every column
             for (int i = 0; i < excelStringValuesArray.GetLength(1); i++)
             {
                 attributes[i] = excelStringValuesArray[0, i];
             }
 
             //run along all the data lines.
+            // k starts from 1 because first line is the attributes names
             for (int k = 1; k < excelStringValuesArray.GetLength(0); k++)
             {
                 //making the new variable to be inserted into the protocol variables dictionary.
@@ -209,7 +212,7 @@ namespace UniJoy
                 rowIndex++;
             }
 
-            //add all checkboxes that are not in the excel file from the beggining.
+            //add all checkboxes that are not in the excel file from the beginning.
             foreach (var item in checkboxesDictionary)
             {
                 //reset the column index for the new line.
@@ -280,6 +283,17 @@ namespace UniJoy
                     returnArray[i, j] = (array[i + 1, j + 1] == null) ? null : array[i + 1, j + 1].ToString();
                 }
             }
+            
+            /*string[,] returnArray = new string[array.GetLength(0), array.GetLength(1)];
+             // better option imho
+
+            for (int i = 1; i <= array.GetLength(0); i++)
+            {
+                for (int j = 1; j <= array.GetLength(1); j++)
+                {
+                    returnArray[i, j] = (array[i, j] == null) ? null : array[i, j].ToString();
+                }
+            }*/
 
             return returnArray;
         }

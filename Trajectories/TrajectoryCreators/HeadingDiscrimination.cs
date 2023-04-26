@@ -117,7 +117,7 @@ namespace Trajectories.TrajectoryCreators
         }
 
         /// <summary>
-        /// ThreeStepAdapdation Constructor.
+        /// ThreeStepAdaptation Constructor.
         /// </summary>
         /// <param name="variablesList">The variables list shown in the read from the excel and changed by the main gui.</param>
         /// <param name="crossVaryingVals">Final list holds all the current cross varying vals by dictionary of variables with values for each line(trial) for both ratHouseParameters and landscapeHouseParameters.</param>
@@ -180,6 +180,7 @@ namespace Trajectories.TrajectoryCreators
             ReadTrialParameters(index);
 
             Vector<double> ratHouseDistanceVector;
+            // what the hack?!
             if (!returnHomeCommand)
             {
                 //make the ratHouseDistance vector.
@@ -427,7 +428,7 @@ namespace Trajectories.TrajectoryCreators
 
         public void WinChartingPlotVector(Vector<double> toPlot)
         {
-            // Create a new datavisualization chart
+            // Create a new data visualization chart
             var chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             // Add a new chart-series
             string seriesname = "Series1";
@@ -456,7 +457,7 @@ namespace Trajectories.TrajectoryCreators
         /// </summary>
         /// <param name="drawingVector">
         /// The vector to be drawn into the graph.
-        /// The x axis is the size of the vecor.
+        /// The x axis is the size of the vector.
         /// The y axis is the vector.
         /// </param>
         public void MindFusionPlotFunction(Vector<double> drawingVector)

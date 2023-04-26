@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioResponse.cs" />
     <Compile Include="ControlLoop.cs" />
     <Compile Include="ExcelProtocolConfigFileLoader.cs" />
     <Compile Include="Globals.cs" />

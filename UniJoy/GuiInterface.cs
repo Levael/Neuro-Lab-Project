@@ -13,6 +13,7 @@ using Trajectories.TrajectoryCreators;
 using VaryingValuesGenerators;
 using MoogController;
 
+
 namespace UniJoy
 {
 
@@ -92,7 +93,7 @@ namespace UniJoy
         private object _lockerStopStartButton;
 
         /// <summary>
-        /// Locker for the pause nad resume button to be enabled not both.
+        /// Locker for the pause and resume button to be enabled not both.
         /// </summary>
         private object _lockerPauseResumeButton;
 
@@ -154,15 +155,15 @@ namespace UniJoy
             //reset the selected direction to be empty.
             //_selectedHandRewardDirections = 0;
 
-            //allocate the start/stop buttom locker.
+            //allocate the start/stop button locker.
             _lockerStopStartButton = new object();
-            //disable initially the start and stop buttom until makeTrials buttom is pressed.
+            //disable initially the start and stop button until makeTrials button is pressed.
             _btnStart.Enabled = false;
             _btnStop.Enabled = false;
 
-            //allocate the pause/resume nuttom locker.
+            //allocate the pause/resume button locker.
             _lockerPauseResumeButton = new object();
-            //disable initially both pause and resume buttoms untill makeTrials buttom is pressed.
+            //disable initially both pause and resume buttons until makeTrials button is pressed.
             _btnPause.Enabled = false;
             _btnResume.Enabled = false;
 
@@ -452,39 +453,6 @@ namespace UniJoy
         }
 
         /// <summary>
-        /// Handler for water reward measurement interactive panel.
-        /// </summary>
-        //public delegate void SetWaterRewardsMeasureDelegate(bool reset = false);
-
-        /// <summary>
-        /// Handler for clearing the selected rat name in the combobox.
-        /// </summary>
-        //public delegate void ResetSelectedRatNameComboboxDelegate();
-
-        /// <summary>
-        /// Handler for clearing the selected student name in the combobox.
-        /// </summary>
-        //public delegate void ResetSelectedStudentNameComboboxDelegate();
-
-        /// <summary>
-        /// Clearing the selected rat name in the combobox.
-        /// </summary>
-        /*private void ResetSelectedRatNameCombobox()
-        {
-            //_comboBoxSelectedRatName.ResetText();
-            //_comboBoxSelectedRatName.SelectedItem = null;
-        }*/
-
-        /// <summary>
-        /// Clearing the selected student name in the combobox.
-        /// </summary>
-        /*private void ResetSelectedStudentNameComboBox()
-        {
-            //_comboBoxStudentName.ResetText();
-            //_comboBoxStudentName.SelectedItem = null;
-        }*/
-
-        /// <summary>
         /// Collect all needed controls and their delegates for the ControlLoop.
         /// </summary>
         /// <returns>
@@ -605,7 +573,7 @@ namespace UniJoy
         /// <param name="e">args</param>
         private void GuiInterface_Close(object sender, EventArgs e)
         {
-            _excelLoader.CloseExcelProtocoConfigFilelLoader();
+            _excelLoader.CloseExcelProtocolConfigFileLoader();
 
             //TODO: Do I need this?
             //turn off the robot servos.
@@ -715,49 +683,7 @@ namespace UniJoy
             _excelLoader.WriteProtocolFile(_protoclsDirPath + @"\" + _textboxNewProtocolName.Text.ToString(), _variablesList, _buttonbasesDictionary);
         }
         #endregion PROTOCOL_GROUPBOX_FUNCTION
-
-        #region SELECTED_RAT_GROUPBOX_FUNCTIONS
-        /// <summary>
-        /// Adding the students names to the rat names combo box by the configuration settings.
-        /// </summary>
-        /*public void AddStudentsNamesToRatNamesComboBox()
-        {
-            //add the rat names in the config file to thw combo box.
-            foreach (string studentName in Properties.Settings.Default.StudentsName)
-            {
-                _comboBoxStudentName.Items.Add(studentName);
-            }
-        }*/
-
-        /// <summary>
-        /// Function handler for changing the rat name.
-        /// </summary>
-        /// <param name="sender">The combobox that has changed.</param>
-        /// <param name="e">The args.</param>
-        /*private void _selectedRatNameComboBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-            //change the selected rat name as followed by the combobox.
-            if ((sender as ComboBox).SelectedItem != null)
-                _cntrlLoop.RatName = (sender as ComboBox).SelectedItem.ToString();
-            else
-                _cntrlLoop.RatName = "";
-        }*/
-
-        /// <summary>
-        /// Function handler for changing the student name.
-        /// </summary>
-        /// <param name="sender">The combobox that has changed.</param>
-        /// <param name="e">The args.</param>
-        /*private void _comboBoxStudentName_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //chenge the selected student name as followed by the combobox.
-            //change the selected rat name as followed by the combobox.
-            if ((sender as ComboBox).SelectedItem != null)
-                _cntrlLoop.StudentName = (sender as ComboBox).SelectedItem.ToString();
-            else
-                _cntrlLoop.StudentName = "";
-        }*/
-        #endregion  
+        
 
         #region EXPERIMENT_RUNNING_CHANGING_FUNCTION
         /// <summary>
@@ -767,54 +693,48 @@ namespace UniJoy
         /// <param name="e">args.</param>
         private void _btnStart_Click(object sender, EventArgs e)
         {
-            //if everything is o.k start the control loop.
-            if (StartLoopStartCheck())
+            //if everything is ok -> start the control loop
+            if (IsReadyToStart())
             {
-                //if (_isEngaged)
+                lock (_lockerStopStartButton)
                 {
-                    lock (_lockerStopStartButton)
+                    #region ENABLE_DISABLE_BUTTONS
+                    _btnStart.Enabled = false;
+                    _btnMakeTrials.Enabled = false;
+                    _btnStop.Enabled = true;
+                    _btnPause.Enabled = true;
+                    _btnResume.Enabled = false;
+                    _btnPark.Enabled = false;
+                    _btnMoveRobotSide.Enabled = false;
+                    #endregion
+
+
+                    //if already running - ignore.
+                    if (!Globals._systemState.Equals(SystemState.RUNNING))
                     {
-                        #region ENABLE_DISABLE_BUTTONS
-                        _btnStart.Enabled = false;
-                        _btnMakeTrials.Enabled = false;
-                        _btnStop.Enabled = true;
-                        _btnPause.Enabled = true;
-                        _btnResume.Enabled = false;
-                        _btnPark.Enabled = false;
-                        _btnMoveRobotSide.Enabled = false;
-                        #endregion
+                        //update the system state.
+                        Globals._systemState = SystemState.RUNNING;
 
-                        //if already running - ignore.
-                        if (!Globals._systemState.Equals(SystemState.RUNNING))
-                        {
-                            //update the system state.
-                            Globals._systemState = SystemState.RUNNING;
+                        //add the static variable list of double type values.
+                        _staticValuesGenerator.SetVariables(_variablesList);
 
-                            //add the static variable list of double type values.
-                            _staticValuesGenerator.SetVariables(_variablesList);
+                        //start the control loop.
+                        //need to be changed according to parameters added to which trajectoryname to be called from the excel file.
+                        //string trajectoryCreatorName = _variablesList._variablesDictionary["TRAJECTORY_CREATOR"]._description["parameters"]._MoogParameter[0].ToString();
+                        //int trajectoryCreatorNum = int.Parse(_variablesList._variablesDictionary["TRAJECTORY_CREATOR"]._description["parameters"]._MoogParameter);
+                        ITrajectoryCreator trajectoryCreator = DecideTrajectoryCreatorByProtocolName(_selectedProtocolName);
 
-                            //start the control loop.
-                            //need to be changed according to parameters added to which trajectoryname to be called from the excel file.
-                            //string trajectoryCreatorName = _variablesList._variablesDictionary["TRAJECTORY_CREATOR"]._description["parameters"]._MoogParameter[0].ToString();
-                            //int trajectoryCreatorNum = int.Parse(_variablesList._variablesDictionary["TRAJECTORY_CREATOR"]._description["parameters"]._MoogParameter);
-                            ITrajectoryCreator trajectoryCreator = DecideTrajectoryCreatorByProtocolName(_selectedProtocolName);
-
-                            _cntrlLoop.NumOfRepetitions = int.Parse(_numOfRepetitionsTextBox.Text.ToString());
-                            _cntrlLoop.NumOfStickOn = int.Parse(_textboxStickOnNumber.Text.ToString());
-                            //_cntrlLoop.PercentageOfTurnedOnLeds = double.Parse(_textboxPercentageOfTurnOnLeds.Text.ToString());
-                            //_cntrlLoop.LEDBrightness = int.Parse(_textboxLEDBrightness.Text.ToString());
-                            //_cntrlLoop.LEDcolorRed = int.Parse(_textBoxLedRedColor.Text.ToString());
-                            //_cntrlLoop.LEDcolorGreen = int.Parse(_textBoxLedGreenColor.Text.ToString());
-                            //_cntrlLoop.LEDcolorBlue = int.Parse(_textBoxLedBlueColor.Text.ToString());
-                            _cntrlLoop.ProtocolFullName = _selectedProtocolFullName.Split('.')[0];//delete the.xlsx extension from the protocol file name.
-                            _cntrlLoop.Start(_variablesList, _acrossVectorValuesGenerator._crossVaryingValsBoth, _staticValuesGenerator._staticVariableList, Properties.Settings.Default.Frequency, trajectoryCreator);
-                        }
+                        _cntrlLoop.NumOfRepetitions = int.Parse(_numOfRepetitionsTextBox.Text.ToString());
+                        _cntrlLoop.NumOfStickOn = int.Parse(_textboxStickOnNumber.Text.ToString());
+                        //_cntrlLoop.PercentageOfTurnedOnLeds = double.Parse(_textboxPercentageOfTurnOnLeds.Text.ToString());
+                        //_cntrlLoop.LEDBrightness = int.Parse(_textboxLEDBrightness.Text.ToString());
+                        //_cntrlLoop.LEDcolorRed = int.Parse(_textBoxLedRedColor.Text.ToString());
+                        //_cntrlLoop.LEDcolorGreen = int.Parse(_textBoxLedGreenColor.Text.ToString());
+                        //_cntrlLoop.LEDcolorBlue = int.Parse(_textBoxLedBlueColor.Text.ToString());
+                        _cntrlLoop.ProtocolFullName = _selectedProtocolFullName.Split('.')[0];//delete the.xlsx extension from the protocol file name.
+                        _cntrlLoop.Start(_variablesList, _acrossVectorValuesGenerator._crossVaryingValsBoth, _staticValuesGenerator._staticVariableList, Properties.Settings.Default.Frequency, trajectoryCreator);
                     }
                 }
-                /*else
-                {
-                    MessageBox.Show("Error - Robot is not engaged!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }*/
             }
         }
 
@@ -822,7 +742,7 @@ namespace UniJoy
         /// Check all parameters needed before the control loop execution.
         /// </summary>
         /// <returns>True or false if can execute the control loop.</returns>
-        private bool StartLoopStartCheck()
+        /*private bool StartLoopStartCheck()
         {
             //if selected rat name is o.k
             /*if (_comboBoxSelectedRatName.SelectedItem != null && _comboBoxStudentName.SelectedItem != null)
@@ -832,11 +752,21 @@ namespace UniJoy
             {
                 MessageBox.Show("Error - Should select a rat name before starting!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
-            }*/
+            }#1#
 
             if (int.Parse(_numOfRepetitionsTextBox.Text.ToString()) % int.Parse(_textboxStickOnNumber.Text.ToString()) != 0)
             {
                 MessageBox.Show("Error - StickOn number should devide Num Of Repetitions!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }*/
+
+        private bool IsReadyToStart()
+        {
+            if (!_isEngaged) {
+                MessageBox.Show("Error - Not engaged", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -998,7 +928,7 @@ namespace UniJoy
         }
 
         /// <summary>
-        /// Handler for Engaging the rovot to it's start point.
+        /// Handler for Engaging the robot to it's start point.
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Args.</param>
@@ -1048,179 +978,11 @@ namespace UniJoy
         }
         #endregion
 
-        #region CHECK_ROBOTS_POSITION_FUNCTIONS
-        //TODO: What changes should be made here to work with Moog?
-        /// <summary>
-        /// Check the both robots exactly at threre park position.
-        /// </summary>
-        /// <returns></returns>
-        /*private string CheckBothRobotsAtParkPosition(double delta)
-        {
-            return CheckBothRobotsAroundDeltaParkPosition(delta);
-        }
-
-        /// <summary>
-        /// Check the both robots arounf the park poistion.
-        /// </summary>
-        /// <returns></returns>
-        private string CheckBothRobotsAroundParkPosition(double delta)
-        {
-            return CheckBothRobotsAroundDeltaParkPosition(delta);
-        }
-
-        /// <summary>
-        /// Check the robots position around delta from there park position.
-        /// </summary>
-        /// <param name="delta">The delta can be accurated to the park position.</param>
-        /// <returns>Empty string if close enough to the position in delta mm , , otherwise the distance string.</returns>
-        private string CheckBothRobotsAroundDeltaParkPosition(double delta)
-        {
-            _motocomController.SetRobotControlGroup(1);
-
-            double[] robot1Pos = _motocomController.GetRobotPlace();
-
-            //when checking that robot position is close to engage for park or park for engage, if delta is small, allow x to be large (it is along the engage-park line).
-            bool robot1PosInPark =
-                (Math.Abs(robot1Pos[0] - (MotocomSettings.Default.R1OriginalX - MotocomSettings.Default.ParkingBackwordDistance)) < delta || delta <= 10) &&
-                Math.Abs(robot1Pos[1] - MotocomSettings.Default.R1OriginalY) < delta &&
-                Math.Abs(robot1Pos[2] - MotocomSettings.Default.R1OriginalZ) < delta;
-
-            _motocomController.SetRobotControlGroup(2);
-
-            double[] robot2Pos = _motocomController.GetRobotPlace();
-
-            bool robot2PosInPark =
-                (Math.Abs(robot2Pos[0] - MotocomSettings.Default.R2OriginalX) < delta || delta <= 10) &&
-                Math.Abs(robot2Pos[1] - MotocomSettings.Default.R2OriginalY) < delta &&
-                Math.Abs(robot2Pos[2] - MotocomSettings.Default.R2OriginalZ) < delta;
-
-            string message = "Robot is out of Range.\nMove manually to < " + delta.ToString() + "mm of the Park position. Current location from Park:\n" +
-                "R1XDelta = " + (robot1Pos[0] - (MotocomSettings.Default.R1OriginalX - MotocomSettings.Default.ParkingBackwordDistance)).ToString("0.00") + "mm\n" +
-                "R1YDelta = " + (robot1Pos[1] - MotocomSettings.Default.R1OriginalY).ToString("0.00") + "mm\n" +
-                "R1ZDelta = " + (robot1Pos[2] - MotocomSettings.Default.R1OriginalZ).ToString("0.00") + "mm\n" +
-                "R2XDelta = " + (robot2Pos[0] - MotocomSettings.Default.R2OriginalX).ToString("0.00") + "mm\n" +
-                "R2YDelta = " + (robot2Pos[1] - MotocomSettings.Default.R2OriginalY).ToString("0.00") + "mm\n" +
-                "R2ZDelta = " + (robot2Pos[2] - MotocomSettings.Default.R2OriginalZ).ToString("0.00") + "mm";
-
-            return (robot1PosInPark && robot2PosInPark) ? (string.Empty) : (message);
-        }
-
-        /// <summary>
-        /// Check if robot1 is in x backward position from it's parking position.
-        /// </summary>
-        /// <returns></returns>
-        private bool Checkrobot1BackwardParkingPosition()
-        {
-            _motocomController.SetRobotControlGroup(1);
-
-            double[] robot1Pos = _motocomController.GetRobotPlace();
-
-            return robot1Pos[0] - (MotocomSettings.Default.R1OriginalX - 500) < 0;
-        }
-
-        /// <summary>
-        /// Check both robots exactly at there enagae position.
-        /// </summary>
-        /// <returns></returns>
-        private string CheckBothRobotsAtEngagePosition(double delta)
-        {
-            return CheckBothRobotAroundDeltaEngagePosition(delta);
-        }
-
-        /// <summary>
-        /// Check the both robots around the engage position.
-        /// </summary>
-        /// <returns></returns>
-        private string CheckBothRobotAroundEngagePosition(double delta)
-        {
-            return CheckBothRobotAroundDeltaEngagePosition(delta);
-        }
-
-        /// <summary>
-        /// Check the both robots around the Aside position.
-        /// </summary>
-        /// <returns></returns>
-        private string CheckBothRobotAroundASidePosition(double delta)
-        {
-            return CheckBothRobotAroundDeltaASidePosition(delta);
-        }
-
-        /// <summary>
-        /// Check the both robots arounf delta from the engage position.
-        /// </summary>
-        /// <param name="delta"></param>
-        /// <returns></returns>
-        private string CheckBothRobotAroundDeltaEngagePosition(double delta)
-        {
-            _motocomController.SetRobotControlGroup(1);
-
-            double[] robot1Pos = _motocomController.GetRobotPlace();
-
-            //when checking that robot position is close to engage for park or park for engage, if delta is small, allow x to be large (it is along the engage-park line).
-            bool robot1PosInEngage = (Math.Abs(robot1Pos[0] - MotocomSettings.Default.R1OriginalX) < delta || delta <= 10) &&
-                Math.Abs(robot1Pos[1] - MotocomSettings.Default.R1OriginalY) < delta &&
-                Math.Abs(robot1Pos[2] - MotocomSettings.Default.R1OriginalZ) < delta;
-
-            _motocomController.SetRobotControlGroup(2);
-
-            double[] robot2Pos = _motocomController.GetRobotPlace();
-
-            bool robot2PosInEngage = (Math.Abs(robot2Pos[0] - MotocomSettings.Default.R2OriginalX) < delta || delta <= 10) &&
-                Math.Abs(robot2Pos[1] - MotocomSettings.Default.R2OriginalY) < delta &&
-                Math.Abs(robot2Pos[2] - MotocomSettings.Default.R2OriginalZ) < delta;
-
-            string message = "\nOR\nMove manually to < " + delta + "mm of the Engage position. Current location from Engage:\n" +
-                "R1XDelta = " + (robot1Pos[0] - MotocomSettings.Default.R1OriginalX).ToString("0.00") + "mm\n" +
-                "R1YDelta = " + (robot1Pos[1] - MotocomSettings.Default.R1OriginalY).ToString("0.00") + "mm\n" +
-                "R1ZDelta = " + (robot1Pos[2] - MotocomSettings.Default.R1OriginalZ).ToString("0.00") + "mm\n" +
-                "R2XDelta = " + (robot2Pos[0] - MotocomSettings.Default.R2OriginalX).ToString("0.00") + "mm\n" +
-                "R2YDelta = " + (robot2Pos[1] - MotocomSettings.Default.R2OriginalY).ToString("0.00") + "mm\n" +
-                "R2ZDelta = " + (robot2Pos[2] - MotocomSettings.Default.R2OriginalZ).ToString("0.00") + "mm";
-
-            return (robot1PosInEngage && robot2PosInEngage) ? (string.Empty) : (message);
-        }
-
-        /// <summary>
-        /// Check the both robots around delta from the ASide position.
-        /// </summary>
-        /// <param name="delta"></param>
-        /// <returns></returns>
-        private string CheckBothRobotAroundDeltaASidePosition(double delta)
-        {
-            _motocomController.SetRobotControlGroup(1);
-
-            double[] robot1Pos = _motocomController.GetRobotPlace();
-
-            //when checking that robot position is close to engage for park or park for engage, if delta is small, allow x to be large (it is along the engage-park line).
-            bool robot1PosInEngage = (Math.Abs(robot1Pos[0] - (MotocomSettings.Default.R1ASideX)) < delta || delta <= 10) &&
-                                     Math.Abs(robot1Pos[1] - MotocomSettings.Default.R1ASideY) < delta &&
-                                     Math.Abs(robot1Pos[2] - MotocomSettings.Default.R1ASideZ) < delta;
-
-            _motocomController.SetRobotControlGroup(2);
-
-            double[] robot2Pos = _motocomController.GetRobotPlace();
-
-            bool robot2PosInEngage = (Math.Abs(robot2Pos[0] - MotocomSettings.Default.R2OriginalX) < delta || delta <= 10) &&
-                                     Math.Abs(robot2Pos[1] - MotocomSettings.Default.R2OriginalY) < delta &&
-                                     Math.Abs(robot2Pos[2] - MotocomSettings.Default.R2OriginalZ) < delta;
-
-            string message = "Move manually to < " + delta + "mm of the Aside position. Current location from Aside:\n" +
-                             "R1XDelta = " + (robot1Pos[0] - MotocomSettings.Default.R1ASideX).ToString("0.00") + "mm\n" +
-                             "R1YDelta = " + (robot1Pos[1] - MotocomSettings.Default.R1ASideY).ToString("0.00") + "mm\n" +
-                             "R1ZDelta = " + (robot1Pos[2] - MotocomSettings.Default.R1ASideZ).ToString("0.00") + "mm\n" +
-                             "R2XDelta = " + (robot2Pos[0] - MotocomSettings.Default.R1ASideRX).ToString("0.00") + "mm\n" +
-                             "R2YDelta = " + (robot2Pos[1] - MotocomSettings.Default.R1ASideRX).ToString("0.00") + "mm\n" +
-                             "R2ZDelta = " + (robot2Pos[2] - MotocomSettings.Default.R1ASideRZ).ToString("0.00") + "mm";
-
-            return (robot1PosInEngage && robot2PosInEngage) ? (string.Empty) : (message);
-        }*/
-        #endregion CHECK_ROBOTS_POSITION_FUNCTIONS
-
         #region VARYING_LISTBOX_FUNCTIONS
         /// <summary>
         /// Adding the generated cross varying values to the varying listbox.
         /// </summary>
-        /// <param name="varyingCrossValsBoth">The cross genereated varying values to add to the listbox.</param>
+        /// <param name="varyingCrossValsBoth">The cross generated varying values to add to the listbox.</param>
         private void AddVaryingMatrixToVaryingListBox(List<Dictionary<string, double>> varyingCrossValsBoth)
         {
             //collect the titles for the listbox columns to a list.
@@ -1755,11 +1517,11 @@ namespace UniJoy
         }
 
         /// <summary>
-        /// Update a right textboxe with the given name to be equals and disabled according to equals parameter.
+        /// Update a right textbox with the given name to be equals and disabled according to equals parameter.
         /// </summary>
         /// <param name="checkboxRightName">The right textbox to be disabled and equaled to the left textbox.</param>
         /// <param name="cehckBoxLeftName">The left textbox to be equals to.</param>
-        /// <param name="equals">Inducate if equals and disable or to enable.</param>
+        /// <param name="equals">Indicate if equals and disable or to enable.</param>
         public void UpdateRightCheckBoxAvailability(string checkboxRightName, string cehckBoxLeftName, bool equals)
         {
             if (_dynamicAllocatedTextBoxes.Keys.Contains(checkboxRightName + "parameters"))
@@ -2618,7 +2380,7 @@ namespace UniJoy
     }
 
     /// <summary>
-    /// Enum describes the systen states.
+    /// Enum describes the system states.
     /// </summary>
     public enum SystemState
     {

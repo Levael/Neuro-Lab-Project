@@ -15,13 +15,15 @@ namespace Trajectories.TrajectoryCreators
         /// <summary>
         /// Generating a vector of sampled gaussian cdf with the given attributes.
         /// </summary>
-        /// <param name="duration">The duraon for the trajectory.</param>
-        /// <param name="sigma">The number of sigmas for the trajectory in the generated gayssian cdf.</param>
-        /// <param name="magnitude">The mfgnitude of the trajectory.</param>
+        /// <param name="duration">The duration for the trajectory.</param>
+        /// <param name="sigma">The number of sigmas for the trajectory in the generated gaussian cdf.</param>
+        /// Image as example (larger number -> smoother graph):
+        /// https://en.wikipedia.org/wiki/Normal_distribution#/media/File:Normal_Distribution_CDF.svg
+        /// <param name="magnitude">The magnitude of the trajectory.</param>
         /// <param name="frequency">The number of samples for the gaussian cdf to the trajectory.</param>
         /// <returns>
-        /// The sampled gaussian cdf trajector.
-        /// The vector length is as the fgiven frequency.
+        /// The sampled gaussian cdf trajectory.
+        /// The vector length is as the given frequency.
         /// </returns>
         Vector<double> GenerateGaussianSampledCDF(double duration, double sigma, double magnitude, int frequency);
 
@@ -31,7 +33,7 @@ namespace Trajectories.TrajectoryCreators
         void ReadTrialParameters(int index);
 
         /// <summary>
-        /// Computes the trajectoy tuple (for the MoogTrajectory and for the VRTrajectory).
+        /// Computes the trajectory tuple (for the MoogTrajectory and for the VRTrajectory).
         /// </summary>
         /// <param name="index">The index from the crossVaryingList to take the attributes of he varying variables from.</param>
         /// <returns>The trajectory tuple (for the MoogTrajectory and for the VRTrajectory). </returns>

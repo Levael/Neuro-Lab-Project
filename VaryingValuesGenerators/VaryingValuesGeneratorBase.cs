@@ -63,13 +63,13 @@ namespace VaryingValuesGenerators
         public abstract void MakeTrialsVaringVectors();
 
         /// <summary>
-        /// Getting the list of all varying vector. Each veactor is represented by dictionary of variable name and value.
+        /// Getting the list of all varying vector. Each vector is represented by dictionary of variable name and value.
         /// </summary>
         /// <returns>Returns list in the size of generated varying vectors. Each vector represents by the name of the variable and it's value.</returns>
         public abstract List<Dictionary<string, double>> MakeVaryingMatrix();
 
         /// <summary>
-        /// Cretaes varying vectors list according to the varying vectors variables(the list include each variable as a vector with no connection each other).
+        /// Creates varying vectors list according to the varying vectors variables(the list include each variable as a vector with no connection each other).
         /// </summary>
         public abstract Dictionary<string, Vector<double>> MakeSeperatedVaryingVectorsList();
 
@@ -78,10 +78,11 @@ namespace VaryingValuesGenerators
         /// </summary>
         /// <param name="lowBound">The low bound to start with.</param>
         /// <param name="highBound">The high bound to end with.</param>
-        /// <param name="increment">The increament between each elemrnt in the generated vector.</param>
+        /// <param name="increment">The increment between each element in the generated vector.</param>
         /// <returns>The generated vector from the input bounds.</returns>
         public Vector<double> CreateVectorFromBounds(double lowBound, double highBound, double increment)
         {
+            // example: [-15, 15] with step 5 = {-15, -10, -5, 0, 5, 10, 15} (3+1+3)
             Vector<double> createdVector = Vector<double>.Build.Dense((int)((highBound - lowBound) / increment + 1));
             int index = 0;
 
@@ -96,7 +97,7 @@ namespace VaryingValuesGenerators
         }
 
         /// <summary>
-        /// Converts a tring numbers array to a double Vector.
+        /// Converts a string numbers array to a double Vector.
         /// </summary>
         /// <param name="vector">The string vector nums.</param>
         /// <returns>The double vector.</returns>

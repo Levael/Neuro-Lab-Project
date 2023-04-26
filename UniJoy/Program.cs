@@ -5,12 +5,12 @@ namespace UniJoy
 {
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        /// THE MAIN ENTRY POINT FOR THE APPLICATION
+        
+        // as I understand it's for Windows forms support (yeh, legacy from MSDOS), otherwise doesn't work
         [STAThread]
         static void Main()
-        { 
+        {
             ExcelProtocolConfigFileLoader excelLoader = new ExcelProtocolConfigFileLoader();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

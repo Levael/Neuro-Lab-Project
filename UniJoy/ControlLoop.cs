@@ -38,20 +38,20 @@ namespace UniJoy
     {
         const bool UPDATE_GLOBAL_DETAILS_LIST_VIEW = false;
 
-        #region CONSTANTS
+        /*#region SOUND_CONSTANTS
         
-        private const int CORRECT_RESP_FREQ = 2200;
+        private const int CORRECT_RESP_FREQ = 2200;     // sound, not MOOG freq...
         private const int INCORRECT_RESP_FREQ = 1000;
         private const int TIMOUT_FREQ = 400;
         private const int PLAYING_SOUND_DURATION = 500; // in milliseconds
         
-        #endregion CONSTANTS
+        #endregion SOUND_CONSTANTS*/
 
         #region ATTRIBUTES
         /// <summary>
         /// The trajectory creator interface for making the trajectory for each trial.
         /// </summary>
-        //todoo::why no references?? needed?
+        //TODO: why no references?? needed?
         private ITrajectoryCreator _trajectoryCreator;
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace UniJoy
         private int _stickOnNumberIndex;
 
         /// <summary>
-        /// Includes all the currebt trial timings and delays.
+        /// Includes all the current trial timings and delays.
         /// </summary>
         private TrialTimings _currentTrialTimings;
 
@@ -157,13 +157,13 @@ namespace UniJoy
         /// </summary>
         private Random _timingRandomizer;
 
-        //todoo::replcae this controller with the responsebox/joystick.
+        //todo::replace this controller with the responsebox/joystick.
         /// <summary>
         /// Controller for the rat Noldus responses.
         /// </summary>
         //private RatResponseController _ratResponseController;
 
-        //todoo::replace that with EEG controller.
+        //todo::replace that with EEG controller.
         /// <summary>
         /// Controller for writing events for the EEG.
         /// </summary>
@@ -311,17 +311,15 @@ namespace UniJoy
 
         #region CONTRUCTORS
         /// <summary>
-        /// Default constructor.
-        /// <param name="matlabApp">The matlab app handler.</param>
-        /// <param name="motomanController">The motoman controller object.</param>
-        /// <param name="ledController">The led controller object.</param>
-        /// <param name="infraRedController">The InfraRed controller for turning on/off the InfraRed.</param>
+        /// Default constructor
         /// <param name="ctrlDelegatesDic">The controls delegate names and objects.</param>
         /// <param name="mainGuiInterfaceControlsDictionary">The name of each main gui needed control and it's reference.</param>
         /// <param name="logger">The program logger for logging into log file.</param>
         /// </summary>
-        public ControlLoop(Dictionary<string, Delegate> ctrlDelegatesDic,
-            Dictionary<string, Control> mainGuiInterfaceControlsDictionary, ILog logger)
+        public ControlLoop(
+            Dictionary<string, Delegate> ctrlDelegatesDic,
+            Dictionary<string, Control> mainGuiInterfaceControlsDictionary,
+            ILog logger)
         {
             _trajectoryCreatorHandler = new TrajectoryCreatorHandler();
 
@@ -737,7 +735,7 @@ namespace UniJoy
             // if the response is None, then the user did not respond in time.
             if (_currentUserResponse == PressType.None)
             {
-                PlayTimeOutSound();
+                AudioResponse.PlayTimeOutSound();
                 // todo: understand the role of this line here - why need to send the command to the unity engine? 
                 //send command to UnityEngine that it should clean all it's rendered data.
                 _unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand, VisualOperationCommand.CleanScreen);
@@ -756,7 +754,7 @@ namespace UniJoy
             if (isCorrect)
             {
                 // play the sound for correct answer.
-                PlayCorrectAnswerSound();
+                AudioResponse.PlayCorrectAnswerSound();
                 //increase the total correct answers.
                 _totalCorrectAnswers++;
                 //update the psycho online graph.
@@ -765,7 +763,7 @@ namespace UniJoy
             else
             {
                 // play the sound for wrong answer.
-                PlayWrongAnswerSound();
+                AudioResponse.PlayWrongAnswerSound();
                 //update the psycho online graph.
                 _onlinePsychGraphMaker.AddResult("Heading Direction", _currentTrialStimulusType, currentHeadingDirection, AnswerStatus.WRONG);
             }
@@ -774,13 +772,13 @@ namespace UniJoy
             return new Tuple<PressType, bool>(_currentUserResponse, isCorrect);
         }
 
-        private void PlayTimeOutSound()
+        /*private void PlayTimeOutSound()
         {
             PlaySound(TIMOUT_FREQ, PLAYING_SOUND_DURATION);
-        }
+        }*/
         
 
-        private void PlaySound(int freq, int duration)
+        /*private void PlaySound(int freq, int duration)
         {
          // play sound in a new thread
             Task.Run(() =>
@@ -788,8 +786,8 @@ namespace UniJoy
                 Console.Beep(freq, duration);
             });
             
-        }
-        private void PlayWrongAnswerSound()
+        }*/
+        /*private void PlayWrongAnswerSound()
         {
             // play the sound in a new thread.
             PlaySound(INCORRECT_RESP_FREQ, PLAYING_SOUND_DURATION);
@@ -798,7 +796,7 @@ namespace UniJoy
         private void PlayCorrectAnswerSound()
         {
             PlaySound(CORRECT_RESP_FREQ, PLAYING_SOUND_DURATION);
-        }
+        }*/
 
 
         // todo: write this function in a more generic way.
@@ -1095,10 +1093,10 @@ namespace UniJoy
 
             //start moving the robot according to the stimulus type.
             _logger.Info("Send Executing robot trajectory data start command");
-            //TODOO:DELETE
+            //TODO:DELETE
             //_robotMotionTask.Start();
 
-            //TODOO: Maayan - call the Moog to make a move
+            //TODO: Maayan - call the Moog to make a move
             int movementDuration = (int)(1000 * _currentTrialTimings.wDuration) + 5000; // ~(Michael Saar)~ added the 5000 
             /*
             _robotMotionTask = Task.Factory.StartNew(() =>
@@ -1164,6 +1162,7 @@ namespace UniJoy
                      for (int i = 0; i < currentTrialTrajectoriesSize; i++)
                      {
                          //start = stopwatchPositions.ElapsedMilliseconds;
+                         /// two times because of specificity of moog
                          MoogController.MoogController.SendPosition(surge[i], heave[i], lateral[i], rx[i], ry[i], rz[i]);
                          MoogController.MoogController.SendPosition(surge[i], heave[i], lateral[i], rx[i], ry[i], rz[i]);
                          //sumTimeSendPositions += stopwatchPositions.ElapsedMilliseconds - start;
@@ -1196,13 +1195,13 @@ namespace UniJoy
                 _currentTrialStimulusType == 4 ||
                 _currentTrialStimulusType == 5)
             {
-                //TODOO:DELETE
+                //TODO:DELETE
                 /*Task.Run(() =>
                 {
                     ExecuteLedControllersCommand();
                 });*/
 
-                //TODOO: Maayan - call the unity visualization
+                //TODO: Maayan - call the unity visualization
                 /*Task.Run(() =>
                 {
                     for ()
@@ -1222,50 +1221,6 @@ namespace UniJoy
                     _unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand , VisualOperationCommand.StartRender);
                 });
             }
-
-            //TODOO:DELETE ALL BLOCK
-            //also run the rat center head checking in parallel to the movement time.
-            bool headInCenterAllTheTime = true;
-            /*Task.Run(() =>
-            {
-                while (!_robotMotionTask.IsCompleted)
-                {
-                    //sample the signal indicating if the rat head is in the center only 60 time per second (because the refresh rate of the signal is that frequency).
-                    Thread.Sleep((int)(Properties.Settings.Default.NoldusRatReponseSampleRate));
-                    if (_currentRatResponse != 2 && headInCenterAllTheTime)
-                    {
-                        _logger.Info("Break fixation during the movement.");
-
-                        headInCenterAllTheTime = false;
-
-                        if (!AutoFixation)
-                        {
-                            if (EnableFixationBreakSound)
-                            //sound the break fixation sound - aaaahhhh sound.
-                            {
-                                Task.Run(() =>
-                                {
-                                    _logger.Info("Start playing the missing answer sound");
-
-                                    _windowsMediaPlayer.URL = _soundPlayerPathDB["MissingAnswer"];
-                                    _windowsMediaPlayer.controls.play();
-
-                                    _logger.Info("End playing the missing answer sound");
-                                });
-                            }
-
-                            //save the state of the enable fixation break sound on.
-                            _soundsMode.BreakFixationSoundOn = EnableFixationBreakSound;
-
-                            //write the break fixation event to the AlphaOmega.
-                            //TODOO: Do I need this?
-                            //_alphaOmegaEventsWriter.WriteEvent(true, AlphaOmegaEvent.HeadStabilityBreak);
-                            _trialEventRealTiming.Add("HeadStabilityBreak", _controlLoopTrialTimer.ElapsedMilliseconds);
-                        }
-                        _autosOptionsInRealTime.AutoFixation = AutoFixation;
-                    }
-                }
-            });*/
 
             //wait the robot task to finish the movement.
             if (_currentTrialStimulusType != 0)
@@ -1291,7 +1246,7 @@ namespace UniJoy
         }
 
         /// <summary>
-        /// Wait for thesubject to press the start button in order to start the movement.
+        /// Wait for the subject to press the start button in order to start the movement.
         /// </summary>
         /// <returns>True if the subject pressed on the start button during the limit of the timeoutTime.</returns>
         //public bool WaitForHeadEnteranceToTheCenterStage()

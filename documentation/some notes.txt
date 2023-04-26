@@ -1,0 +1,52 @@
+﻿Some thoughts about the project:
+
+
+Option 1: rewrite everything for Arduino (upd: nooo)
+- input:  computer (instructions),  controller
+- output: computer (recieved data), ocolus, moog, speakers
+
+Arduino connects a computer to those 4 devices and responsible for hardware only (maybe instructions for moog too).
+It's like a game: start game on PC, keyboard/controller are inputs, oculus/speakers are outputs.
+I suppose it is possible to run simulation and c# project at the same time.
+
+To learn: C#, Unity, Arduino?
+
+==============================================================================================================================
+
+Ideas for future:
+- save every experiment in it's own separate folder: input instructions, answers, video, time (start/end/whole)
+- add intercome (computer input to arduino output)
+
+==============================================================================================================================
+Some notes about MOOG:
+
+1) 103 may be usefull with long distances:
+Length Command Mode Data packet 		101: start position is defined by the Actuator Lengths specified in the packet.
+DOF Command Mode Data packet 			100: start position is defined by the DOF Commands specified in the packet.
+Motion-Cueing Command Mode Data packet 	102: start position is at mid-Heave.
+Playback Command Mode Data packet 		103: start position is the first position found in the playback file.
+
+2) Pages 44-49 of "CDS7330 INTERFACE DEFINITION MANUAL.pdf" are about errors
+3) Pages 43-47 of "6DOF2000E Real Time Ethernet Interface Definition - CDS7237.pdf" are about Running the motion base algorithm
+
+==============================================================================================================================
+
+Software limits for DOF:
+
+- pitch: 	+-22deg
+- roll:		+-21deg
+- yaw: 		+-22deg
+- heave: 	+-0.178m
+- surge: 	+0.259m -0.241m
+- sway: 	+-0.259m
+
+==============================================================================================================================
+
+DOF orientations of '+': (orientations are defined from the perspective of a rider seated on the base facing forward)
+
+roll 	= clockwise
+pitch 	= front edge of platform moves up
+heave 	= down
+surge 	= forward
+yaw 	= clockwise (from above)
+lateral = right

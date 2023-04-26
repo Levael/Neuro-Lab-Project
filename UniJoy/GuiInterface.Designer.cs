@@ -22,16 +22,16 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary> 
+        /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this._protocolsComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -414,17 +414,17 @@
             // 
             // _onlinePsychGraphControl
             // 
-            chartArea6.Name = "ChartArea1";
-            this._onlinePsychGraphControl.ChartAreas.Add(chartArea6);
-            legend6.Name = "Legend1";
-            this._onlinePsychGraphControl.Legends.Add(legend6);
+            chartArea1.Name = "ChartArea1";
+            this._onlinePsychGraphControl.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this._onlinePsychGraphControl.Legends.Add(legend1);
             this._onlinePsychGraphControl.Location = new System.Drawing.Point(6, 19);
             this._onlinePsychGraphControl.Name = "_onlinePsychGraphControl";
-            series6.ChartArea = "ChartArea1";
-            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
-            series6.Legend = "Legend1";
-            series6.Name = "Series1";
-            this._onlinePsychGraphControl.Series.Add(series6);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this._onlinePsychGraphControl.Series.Add(series1);
             this._onlinePsychGraphControl.Size = new System.Drawing.Size(379, 279);
             this._onlinePsychGraphControl.TabIndex = 0;
             this._onlinePsychGraphControl.Text = "chart1";
@@ -451,7 +451,13 @@
             this._ardionoPrtWarningLabel.TabIndex = 0;
             this._ardionoPrtWarningLabel.Text = "The COM4 (Arduino) port is not connected-LEDS not work properly";
             this._ardionoPrtWarningLabel.Visible = false;
-
+            // 
+            // _checkboxRRDelta
+            // 
+            this._checkboxRRDelta.Location = new System.Drawing.Point(0, 0);
+            this._checkboxRRDelta.Name = "_checkboxRRDelta";
+            this._checkboxRRDelta.Size = new System.Drawing.Size(104, 24);
+            this._checkboxRRDelta.TabIndex = 0;
             // 
             // _checkBoxRightAndLeftSame
             // 
@@ -463,6 +469,20 @@
             this._checkBoxRightAndLeftSame.Text = "R + L Same";
             this._checkBoxRightAndLeftSame.UseVisualStyleBackColor = true;
             this._checkBoxRightAndLeftSame.CheckedChanged += new System.EventHandler(this._checkBoxRightAndLeftSame_CheckedChanged);
+            // 
+            // _checkBoxFixationOnly
+            // 
+            this._checkBoxFixationOnly.Location = new System.Drawing.Point(0, 0);
+            this._checkBoxFixationOnly.Name = "_checkBoxFixationOnly";
+            this._checkBoxFixationOnly.Size = new System.Drawing.Size(104, 24);
+            this._checkBoxFixationOnly.TabIndex = 0;
+            // 
+            // _checkBoxEnableGoCue
+            // 
+            this._checkBoxEnableGoCue.Location = new System.Drawing.Point(0, 0);
+            this._checkBoxEnableGoCue.Name = "_checkBoxEnableGoCue";
+            this._checkBoxEnableGoCue.Size = new System.Drawing.Size(104, 24);
+            this._checkBoxEnableGoCue.TabIndex = 0;
             // 
             // _checkboxErrorSoundOn
             // 
@@ -512,6 +532,20 @@
             this._groupboxGoCue.TabStop = false;
             this._groupboxGoCue.Text = "GoCue";
             // 
+            // _radiobuttonGoCueCorrectSide
+            // 
+            this._radiobuttonGoCueCorrectSide.Location = new System.Drawing.Point(0, 0);
+            this._radiobuttonGoCueCorrectSide.Name = "_radiobuttonGoCueCorrectSide";
+            this._radiobuttonGoCueCorrectSide.Size = new System.Drawing.Size(104, 24);
+            this._radiobuttonGoCueCorrectSide.TabIndex = 0;
+            // 
+            // _radiobuttonGoCueBothSide
+            // 
+            this._radiobuttonGoCueBothSide.Location = new System.Drawing.Point(0, 0);
+            this._radiobuttonGoCueBothSide.Name = "_radiobuttonGoCueBothSide";
+            this._radiobuttonGoCueBothSide.Size = new System.Drawing.Size(104, 24);
+            this._radiobuttonGoCueBothSide.TabIndex = 1;
+            // 
             // GuiInterface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -543,10 +577,8 @@
             this._warningsGroupBox.ResumeLayout(false);
             this._warningsGroupBox.PerformLayout();
             this._groupboxGoCue.ResumeLayout(false);
-            this._groupboxGoCue.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

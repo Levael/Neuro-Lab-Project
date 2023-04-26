@@ -10,6 +10,12 @@ namespace InputOutputDeviceHandlers.UserInputs.Cedrus
     public class CedrusResponseBox : IUserInputController
     {
         private SerialPort _serialPort;
+        
+        /*private const int BTN_START  = 255;
+        private const int BTN_LEFT   = 254;
+        private const int BTN_RIGHT  = 253;
+        private const int BTN_DOWN   = 252;
+        private const int BTN_UP     = 251;*/
 
         private const int StartPress = 255;
         private const int LeftPress = 254;
@@ -19,9 +25,7 @@ namespace InputOutputDeviceHandlers.UserInputs.Cedrus
 
         public CedrusResponseBox()
         {
-            _serialPort = new SerialPort("COM3",
-               9600, Parity.None, 8, StopBits.One);
-            
+            _serialPort = new SerialPort("COM3", 9600, Parity.None, 8, StopBits.One);
             _serialPort.Open();
         }
 

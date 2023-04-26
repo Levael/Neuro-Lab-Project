@@ -10,7 +10,7 @@ namespace VaryingValuesGenerators
 {
     /// <summary>
     /// This class attempt to create all the needed trials  for the Azimuth1D protocol and the ThreeStepAdaptation protocol.
-    /// parmaeters for the whole experiment according to the protocol and th GuiInterfae inputs.
+    /// parameters for the whole experiment according to the protocol and th GuiInterface inputs.
     /// </summary>
     public class VaryingValuesGenerator : VaryingValuesGeneratorBase
     {
@@ -109,7 +109,7 @@ namespace VaryingValuesGenerators
         }
 
         /// <summary>
-        /// Getting the list of all varying vector. Each veactor is represented by dictionary of variable name and value.
+        /// Getting the list of all varying vector. Each vector is represented by dictionary of variable name and value.
         /// </summary>
         /// <returns>Returns list in the size of generated varying vectors. Each vector represents by the name of the variable and it's value.</returns>
         public override List<Dictionary<string, double>> MakeVaryingMatrix()
@@ -144,11 +144,11 @@ namespace VaryingValuesGenerators
         }
 
         /// <summary>
-        /// Cretaes varying vectors list according to the varying vectors variables(the list include each variable as a vector with no connection each other).
+        /// Creates varying vectors list according to the varying vectors variables(the list include each variable as a vector with no connection each other).
         /// </summary>
         public override Dictionary<string, Vector<double>> MakeSeperatedVaryingVectorsList()
         {
-            //a list include all varying vectors by themselves only.
+            //a list includes all varying vectors by themselves only.
             Dictionary<string, Vector<double>> varyingVectorsList = new Dictionary<string, Vector<double>>();
 
             #region MAKING_VARYING_VECTOR_LIST
@@ -158,7 +158,7 @@ namespace VaryingValuesGenerators
 
                 if (item.Value._description["status"].MoogParameter == "2")
                 {
-                    double low_bound = double.Parse(item.Value._description["low_bound"].MoogParameter);
+                    double low_bound  = double.Parse(item.Value._description["low_bound"].MoogParameter);
                     double high_bound = double.Parse(item.Value._description["high_bound"].MoogParameter);
                     double increament = double.Parse(item.Value._description["increament"].MoogParameter);
 

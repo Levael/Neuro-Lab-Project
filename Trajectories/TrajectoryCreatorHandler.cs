@@ -10,13 +10,13 @@ namespace Trajectories
 {
     /// <summary>
     /// This class is called in each trial in order to create the trajectories to the current trial
-    /// according to the current trial parmaters.
+    /// according to the current trial paramaters.
     /// </summary>
     public class TrajectoryCreatorHandler
     {
         #region ATTRIBUTES
         /// <summary>
-        /// The trajectory creator name (the name of the type for making the trjectory).
+        /// The trajectory creator name (the name of the type for making the trajectory).
         /// </summary>
         private string _trajectoryCreatorName;
 
@@ -92,12 +92,12 @@ namespace Trajectories
         }
 
         /// <summary>
-        /// Create a trajectory for both the ratHouseTrajectory and the landscapeHouseTrjectory for the control loop.
+        /// Create a trajectory the landscapeHouseTrajectory for the control loop.
         /// </summary>
-        /// <returns>The both ratHouseTrajectory and the landscapeHouseTrjectory.</returns>
+        /// <returns>The landscapeHouseTrajectory.</returns>
         public Tuple<Trajectory, Trajectory> CreateTrajectory(int index = 0 , bool returnHomeCommand = false)
         {
-            return _trajectoryCreator.CreateTrialTrajectory(index , returnHomeCommand);
+            return _trajectoryCreator.CreateTrialTrajectory(index, returnHomeCommand);
         }
         #endregion FUNCTIONS
     }

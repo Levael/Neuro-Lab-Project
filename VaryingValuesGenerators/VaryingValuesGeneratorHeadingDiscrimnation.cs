@@ -159,7 +159,7 @@ namespace VaryingValuesGenerators
         }
 
         /// <summary>
-        /// Cretaes varying vectors list according to the varying vectors variables(the list include each variable as a vector with no connection each other).
+        /// Creates varying vectors list according to the varying vectors variables(the list include each variable as a vector with no connection each other).
         /// </summary>
         public override Dictionary<string, Vector<double>> MakeSeperatedVaryingVectorsList()
         {

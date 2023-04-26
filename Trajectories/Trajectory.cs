@@ -41,7 +41,7 @@ namespace Trajectories
         public Vector<double> RY { get; set; }
 
         /// <summary>
-        /// The z rotation axis for thevector list position.
+        /// The z rotation axis for the vector list position.
         /// </summary>
         public Vector<double> RZ { get; set; }
 
@@ -100,7 +100,7 @@ namespace Trajectories
 
             Position originPoint = new Position() { X = 0, Y = 0, Z = 0, RX = 0, RY = 0, RZ = 0 };
 
-            //todo:decide if to return new one or the input one (chenged).
+            //todo:decide if to return new one or the input one (changed).
             if (!forward)
             {
                 this.Add(originPoint);
@@ -230,7 +230,7 @@ namespace Trajectories
             //the inversed trajectory to be returned.
             Trajectory inverseTrajectory = new Trajectory();
 
-            //initialization for the the trajectorry yo be retund.
+            //initialization for the trajectory to be retund.
             int length = this.Count;
             inverseTrajectory.X = Vector<double>.Build.Dense(length);
             inverseTrajectory.Y = Vector<double>.Build.Dense(length);
