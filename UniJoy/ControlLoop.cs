@@ -36,16 +36,7 @@ namespace UniJoy
     /// </summary>
     public class ControlLoop
     {
-        const bool UPDATE_GLOBAL_DETAILS_LIST_VIEW = false;
-
-        /*#region SOUND_CONSTANTS
-        
-        private const int CORRECT_RESP_FREQ = 2200;     // sound, not MOOG freq...
-        private const int INCORRECT_RESP_FREQ = 1000;
-        private const int TIMOUT_FREQ = 400;
-        private const int PLAYING_SOUND_DURATION = 500; // in milliseconds
-        
-        #endregion SOUND_CONSTANTS*/
+        //const bool UPDATE_GLOBAL_DETAILS_LIST_VIEW = false;
 
         #region ATTRIBUTES
         /// <summary>
@@ -101,7 +92,7 @@ namespace UniJoy
         private int _totalCorrectAnswers;
 
         /// <summary>
-        /// Thr total number of enterance to the center during timeout time with stability during the duration time.
+        /// The total number of entrance to the center during timeout time with stability during the duration time.
         /// </summary>
         private int _totalHeadStabilityInCenterDuringDurationTime;
 
@@ -140,6 +131,7 @@ namespace UniJoy
         /// </summary>
         private TrialTimings _currentTrialTimings;
 
+        // WTF?
         /// <summary>
         /// The current trial trajectories.
         /// The first element in the tuple is the ratHouseTrajectory.
@@ -195,7 +187,7 @@ namespace UniJoy
         private Stopwatch _controlLoopTrialTimer;
 
         /// <summary>
-        /// A dictionary include a key for the ecvent name and a double for the time of the event since the start of the trial. Each trial the dictionary cleared.
+        /// A dictionary include a key for the event name and a double for the time of the event since the start of the trial. Each trial the dictionary cleared.
         /// </summary>
         private Dictionary<string, double> _trialEventRealTiming;
 
@@ -218,12 +210,12 @@ namespace UniJoy
         /// <summary>
         /// The selected rat name (that makes the experiment).
         /// </summary>
-        public string RatName { get; set; }
+        public string TesteeName { get; set; }
 
         /// <summary>
         /// The name of the student that makes the experiment.
         /// </summary>
-        public string StudentName { get; set; }
+        public string ResearcherName { get; set; }
 
         /// <summary>
         /// The number of repetitions for the varying set.
@@ -248,17 +240,17 @@ namespace UniJoy
         private ILog _logger;
 
         /// <summary>
-        /// The online psyco graph maker object to control the psycho chart.
+        /// The online psycho graph maker object to control the psycho chart.
         /// </summary>
         private OnlinePsychGraphMaker _onlinePsychGraphMaker;
 
         /// <summary>
-        /// The task executing the robot forward motion untill finished.
+        /// The task executing the robot forward motion until finished.
         /// </summary>
         private Task _robotMotionTask;
 
         /// <summary>
-        /// Indicated if whether to wait for a rat to enter it's head to the center automatically skiping this step.
+        /// Indicated if whether to wait for a rat to enter it's head to the center automatically skipping this step.
         /// </summary>
         public bool AutoStart { get; set; }
 
@@ -309,7 +301,7 @@ namespace UniJoy
 
         #endregion ATTRIBUTES
 
-        #region CONTRUCTORS
+        #region CONTRUCTOR
         /// <summary>
         /// Default constructor
         /// <param name="ctrlDelegatesDic">The controls delegate names and objects.</param>
@@ -353,14 +345,15 @@ namespace UniJoy
                 ChartControl = _mainGuiInterfaceControlsDictionary["OnlinePsychoGraph"] as Chart
             };
 
-            //initialize the MrdiaPlayer controller and the DB of sound effects and their path.
+            //initialize the MediaPlayer controller and the DB of sound effects and their path.
+            // todo ??? where
             _soundPlayerPathDB = new Dictionary<string, string>();
             LoadAllSoundPlayers();
             _windowsMediaPlayer = new WindowsMediaPlayer();
 
-            Task.Run(() => TryConnectToUnityEngine());
+            //Task.Run(() => TryConnectToUnityEngine());
         }
-        #endregion CONTRUCTORS
+        #endregion CONTRUCTOR
 
         #region FUNCTIONS
 
@@ -397,8 +390,22 @@ namespace UniJoy
 
             //create a new results file for the new experiment.
             _savedExperimentDataMaker.CreateControlNewFile(ProtocolFullName);
+            Task.Run(() => {
+                _logger.Info("Saving experiment const parameters to the result file (once).");
+                _savedExperimentDataMaker.SaveExperimentDataToFile(new ExperimentData()
+                {
+                    ApplicationVersionNumber = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                    ProtocolName = ProtocolFullName,
+                    TesteeName = TesteeName,
+                    ResearcherName = ResearcherName,
+                    NumOfRepetitions = NumOfRepetitions,
+                    AutosOptions = _autosOptionsInRealTime,
+                    SpecialModes = _specialModesInRealTime,
+                    SoundsMode = _soundsMode
+                });
+            });
 
-            //clear and initialize the psyco online graph.
+            //clear and initialize the psycho online graph.
             _onlinePsychGraphMaker.Clear();
             _onlinePsychGraphMaker.VaryingParametrsNames = GetVaryingVariablesList();
             _onlinePsychGraphMaker.HeadingDireactionRegion = new Region
@@ -409,11 +416,11 @@ namespace UniJoy
             };
             _onlinePsychGraphMaker.InitSerieses();
 
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
+/*#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
             //reset the amount of water measurement interactive panel.
             _mainGuiInterfaceControlsDictionary["SetWaterRewardsMeasure"].BeginInvoke(
               _mainGuiControlsDelegatesDictionary["SetWaterRewardsMeasure"], true);
-#endif
+#endif*/
 
             //run the main control loop function in other thread from the main thread ( that handling events and etc).
             _stopAfterTheEndOfTheCurrentTrial = false;
@@ -579,18 +586,18 @@ namespace UniJoy
             EndControlLoopByStopFunction();
         }
         /// <summary>
-        /// Initializes the variables , points , trajectories , random varibles ,  etc.
+        /// Initializes the variables , points , trajectories , random variables ,  etc.
         /// </summary>
         public void ResetVariables()
         {
             //TODOO : change the index of the trial to be identical to the trial number in the result file.
             _logger.Info("Initialization Stage of trial #" + (_totalHeadStabilityInCenterDuringDurationTime + 1));
 
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
+/*#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
             //update the global details listview with the current stage.
             _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
             _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Intialization");
-#endif
+#endif*/
 
             //determine all current trial timings and delays.
             _currentTrialTimings = DetermineCurrentTrialTimings();
@@ -617,7 +624,7 @@ namespace UniJoy
             _trialEventRealTiming.Clear();
         }
 
-        void SendTrialMetaDataToUnityEngine()
+        /*void SendTrialMetaDataToUnityEngine()
         {
             UnijoyTrialMetaData unijoyTrialMetaData = new UnijoyTrialMetaData()
             {
@@ -663,7 +670,7 @@ namespace UniJoy
             File.WriteAllText(serializedDataPath, serializedData);
 
             _unityCommandsSender.TrySendCommand(UnityEngineCommands.ReadTrialData, serializedDataPath);
-        }
+        }*/
 
         /// <summary>
         /// Pre trial stage for sending all pre data for the current trial.
@@ -771,32 +778,6 @@ namespace UniJoy
             _logger.Info($"ResponseTimeStage end. User responded in time. User response: {_currentUserResponse}. Correct answer: {_correctDecision}. Is correct: {isCorrect}.");
             return new Tuple<PressType, bool>(_currentUserResponse, isCorrect);
         }
-
-        /*private void PlayTimeOutSound()
-        {
-            PlaySound(TIMOUT_FREQ, PLAYING_SOUND_DURATION);
-        }*/
-        
-
-        /*private void PlaySound(int freq, int duration)
-        {
-         // play sound in a new thread
-            Task.Run(() =>
-            {
-                Console.Beep(freq, duration);
-            });
-            
-        }*/
-        /*private void PlayWrongAnswerSound()
-        {
-            // play the sound in a new thread.
-            PlaySound(INCORRECT_RESP_FREQ, PLAYING_SOUND_DURATION);
-        }
-
-        private void PlayCorrectAnswerSound()
-        {
-            PlaySound(CORRECT_RESP_FREQ, PLAYING_SOUND_DURATION);
-        }*/
 
 
         // todo: write this function in a more generic way.
@@ -970,8 +951,8 @@ namespace UniJoy
 
         /// <summary>
         /// The reward left stage is happening if the rat decide the correct stimulus side.
-        /// <param name="autoReward">Indecation if to give the reward with no delay.</param>
-        /// <param name="RewardSound">Indecation ig to give the reward sound during the reward.</param>
+        /// <param name="autoReward">Indication if to give the reward with no delay.</param>
+        /// <param name="RewardSound">Indication ig to give the reward sound during the reward.</param>
         /// <param name="secondChance">Indicate if it is reward for the second chance.</param>
         /// <param name="responseReward">Indicates if the reward is due to a response or due to the center stability stage.</param>
         /// </summary>
@@ -996,8 +977,8 @@ namespace UniJoy
 
         /// <summary>
         /// The reward right stage is happening if the rat decide the correct stimulus side.
-        /// <param name="autoReward">Indecation if to give the reward with no delay.</param>
-        /// <param name="RewardSound">Indecation ig to give the suto reard sound during the reward.</param>
+        /// <param name="autoReward">Indication if to give the reward with no delay.</param>
+        /// <param name="RewardSound">Indication ig to give the suto reard sound during the reward.</param>
         /// <param name="secondChance">Indicate if it is reward for the second chance.</param>
         /// <param name="responseReward">Indicates if the reward is due to a response or due to the center stability stage.</param>
         /// </summary>
@@ -1022,8 +1003,8 @@ namespace UniJoy
 
         /// <summary>
         /// The reward center stage is happening if the rat head was consistently stable in the center during the movement.
-        /// <param name="autoReward">Indecation if to give the reward with no delay.</param>
-        /// <param name="autoRewardSound">Indecation ig to give the suto reard sound during the reward.</param>
+        /// <param name="autoReward">Indication if to give the reward with no delay.</param>
+        /// <param name="autoRewardSound">Indication ig to give the suto reard sound during the reward.</param>
         /// <param name="responseReward">Indicates if the reward is due to a response or due to the center stability stage.</param>
         /// </summary>
         public void RewardCenterStage(bool autoReward = false, bool autoRewardSound = false, bool secondChance = false, bool responseReward = false)
@@ -1042,7 +1023,7 @@ namespace UniJoy
         }
 
         /// <summary>
-        /// The stage for the time between the end of the reward to the beginnig moving tohe robot to it's home position.
+        /// The stage for the time between the end of the reward to the beginning moving to the robot to it's home position.
         /// </summary>
         private void RewardToBackwardDelayStage()
         {
@@ -1302,8 +1283,8 @@ namespace UniJoy
         }
 
         /// <summary>
-        /// The post trial time - analyaing the response , saving all the trial data into the results file.
-        /// <param name="duration1HeadInTheCenterStabilityStage">Indicated if one of the robots ot both moved due to suration 1 head in the center stability stage.</param>
+        /// The post trial time - analyzing the response , saving all the trial data into the results file.
+        /// <param name="duration1HeadInTheCenterStabilityStage">Indicated if one of the robots ot both moved due to duration 1 head in the center stability stage.</param>
         /// <returns>True if trial succeed otherwise returns false.</returns>
         /// </summary>
         public bool PostTrialStage(bool duration1HeadInTheCenterStabilityStage) // duration1HeadInTheCenterStabilityStage is always true
@@ -1312,59 +1293,57 @@ namespace UniJoy
 
             //update the global details listview with the current stage.
 
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
+/*#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
             _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
             _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Post trial time.");
-#endif
-            //need to get the robot backwards only if there was a rat enterance that trigger thr robot motion.
+#endif*/
+            //need to get the robot backwards only if there was a rat entrance that trigger thr robot motion.
             Task moveRobotHomePositionTask;
-            if (!duration1HeadInTheCenterStabilityStage || !IsMoogConnected)
+            /*if (!duration1HeadInTheCenterStabilityStage || !IsMoogConnected)
             {
                 _logger.Info("Backward not executed because duration1HeadInTheCenterStabilityStage = false. Calling NullFunction().");
                 moveRobotHomePositionTask = Task.Factory.StartNew(() => NullFunction());
             }
             else
-            {
+            {*/
                 //send the AlphaOmega that motion backward starts.
                 //TODOO: Do I need this?
-                _evenstWriter.WriteEvent(UnijoyEvent.MoogStartMovingBackward);
-                _trialEventRealTiming.Add("RobotStartMovingBackward", _controlLoopTrialTimer.ElapsedMilliseconds);
+            _evenstWriter.WriteEvent(UnijoyEvent.MoogStartMovingBackward);
+            _trialEventRealTiming.Add("RobotStartMovingBackward", _controlLoopTrialTimer.ElapsedMilliseconds);
 
 
-                _logger.Info("Creating backward trajectory.");
-                //TODOO: Do I need this? yes
-                Tuple<Trajectory, Trajectory> returnTrajectory = _trajectoryCreatorHandler.CreateTrajectory(_currentVaryingTrialIndex, true);
-                _logger.Info("Finish creating backward trajectory.");
+            _logger.Info("Creating backward trajectory.");
+            //TODOO: Do I need this? yes
+            Tuple<Trajectory, Trajectory> returnTrajectory = _trajectoryCreatorHandler.CreateTrajectory(_currentVaryingTrialIndex, true);
+            _logger.Info("Finish creating backward trajectory.");
 
-                moveRobotHomePositionTask = Task.Factory.StartNew(() =>
+            moveRobotHomePositionTask = Task.Factory.StartNew(() =>
+            {
+                //for (_currentTrialTrajectories.Moog.count)
+                _logger.Info("Backward started.");
+
+                int rtuenTrajectorySize = returnTrajectory.Item1.Count();
+                   
+                // ~(Michael Saar)~ --- DEBUG ---
+                    
+                for (int i = 0; i < rtuenTrajectorySize; i += 1) // ~(Michael Saar)~ increment by 6 in order to imitate 1000Hz behavior over 2.5 seconds
                 {
-                    //for (_currentTrialTrajectories.Moog.count)
-                    _logger.Info("Backward started.");
-
-                    int rtuenTrajectorySize = returnTrajectory.Item1.Count();
-                    
-                    // ~(Michael Saar)~ --- DEBUG ---
-                    
-                    for (int i = 0; i < rtuenTrajectorySize; i += 1) // ~(Michael Saar)~ increment by 6 in order to imitate 1000Hz behavior over 2.5 seconds
-                    {
-                        //SendPosition(currentTrialTrajectory.Moog(i).X , currentTrialTrajectory.Moog(i).Y , currentTrialTrajectory.Moog(i).Z)
-                        double MOTION_BASE_CENTER = -0.22077500;
-                        int size = _currentTrialTrajectories.Item1.X.Count - 1;
-                        double surge = _currentTrialTrajectories.Item1[size].X + returnTrajectory.Item1[i].X;
-                        double lateral = _currentTrialTrajectories.Item1[size].Y + returnTrajectory.Item1[i].Y;
-                        double heave = returnTrajectory.Item1[i].Z + MOTION_BASE_CENTER;
-                        double rx = returnTrajectory.Item1[i].RX;
-                        double ry = returnTrajectory.Item1[i].RY;
-                        double rz = returnTrajectory.Item1[i].RZ;
-                        MoogController.MoogController.SendPosition(surge / 100.0, heave, lateral / 100.0, rx, ry, rz);
-                        MoogController.MoogController.SendPosition(surge / 100.0, heave, lateral / 100.0, rx, ry, rz);
-                    }
-                    
-                    // send all 1000 positions at once without loop
-
-                    _logger.Info("Backward ended.");
-                });
-            }
+                    //SendPosition(currentTrialTrajectory.Moog(i).X , currentTrialTrajectory.Moog(i).Y , currentTrialTrajectory.Moog(i).Z)
+                    double MOTION_BASE_CENTER = -0.22077500;
+                    int size = _currentTrialTrajectories.Item1.X.Count - 1;
+                    double surge = _currentTrialTrajectories.Item1[size].X + returnTrajectory.Item1[i].X;
+                    double lateral = _currentTrialTrajectories.Item1[size].Y + returnTrajectory.Item1[i].Y;
+                    double heave = returnTrajectory.Item1[i].Z + MOTION_BASE_CENTER;
+                    double rx = returnTrajectory.Item1[i].RX;
+                    double ry = returnTrajectory.Item1[i].RY;
+                    double rz = returnTrajectory.Item1[i].RZ;
+                    MoogController.MoogController.SendPosition(surge / 100.0, heave, lateral / 100.0, rx, ry, rz);
+                    MoogController.MoogController.SendPosition(surge / 100.0, heave, lateral / 100.0, rx, ry, rz);
+                }
+                // send all 1000 positions at once without loop
+                _logger.Info("Backward ended.");
+            });
+            //}
             
             // ---DEBUG LOG: why is there a sleep here? // ~(Michael Saar)~ 
             //_logger.Info("before post trial 5000 milliseconds sleep.");
@@ -1390,22 +1369,10 @@ namespace UniJoy
                     _logger.Info("Saving trial# " + (_totalHeadStabilityInCenterDuringDurationTime + _totalHeadFixationBreaks) + " to the result file.");
                     _savedExperimentDataMaker.SaveTrialDataToFile(new TrialData()
                     {
-                        StaticVariables = _staticVariablesList,
-                        VaryingVariables = _crossVaryingVals[_currentVaryingTrialIndex],
-                        TimingsVariables = _currentTrialTimings,
-                        ApplicationVersionNumber = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(),
-                        ProtocolName = ProtocolFullName,
-                        RatName = RatName,
-                        StudentName = StudentName,
-                        //todoo::chnage that _currentRatDecision
-                        //RatDecison = _currentRatDecision,
                         TrialNum = _totalHeadStabilityInCenterDuringDurationTime + _totalHeadFixationBreaks,
-                        StickOnNumber = NumOfStickOn,
-                        NumOfRepetitions = NumOfRepetitions,
-                        AutosOptions = _autosOptionsInRealTime,
-                        SpecialModes = _specialModesInRealTime,
-                        SoundsMode = _soundsMode,
-                        TrialEventsTiming = _trialEventRealTiming,
+                        //todo::change that _currentRatDecision
+                        //RatDecision = _currentRatDecision,
+                        TrialEventsTiming = _trialEventRealTiming
                     });
                 });
             }
@@ -1427,6 +1394,7 @@ namespace UniJoy
             //todoo::check what is trial succedd in Moog terms - no response is OK?
             return trialSucceed;
         }
+        
         #endregion STAGES_FUNCTION
 
         #region STAGES_ADDIION_FUNCTION
@@ -1578,7 +1546,7 @@ namespace UniJoy
         {
             Globals._systemState = SystemState.FINISHED;
 
-            //todoo::check if to send here clear command to unity engine/Moog.
+            //todo::check if to send here clear command to unity engine/Moog.
 
             //reset the repetition index.
             _repetitionIndex = 0;
@@ -1593,6 +1561,7 @@ namespace UniJoy
             //raise an event for the GuiInterface that the trials round is over.
             _mainGuiInterfaceControlsDictionary["FinishedAllTrialsRound"].BeginInvoke(_mainGuiControlsDelegatesDictionary["FinishedAllTrialsRound"]);
 
+            // ???
             //choose none rat in the selected rat
             _mainGuiInterfaceControlsDictionary["ResetSelectedRatNameCombobox"].BeginInvoke(_mainGuiControlsDelegatesDictionary["ResetSelectedRatNameCombobox"]);
             //#endif
@@ -1829,76 +1798,18 @@ namespace UniJoy
             /// </summary>
             public double wStartDelay;
 
-            //TODOO: Maayan - Do I need all these parameters?
-            /*
-            /// <summary>
-            /// The delay between the center head tracking (for the trial begin) and the center reward.
-            /// </summary>
-            public double wRewardCenterDelay;
-
-            /// <summary>
-            /// The delay between the right head tracking (for the trial begin) and the right reward.
-            /// </summary>
-            public double wRewardRightDelay;
-
-            /// <summary>
-            /// The delay between the left head tracking (for the trial begin) and the left reward.
-            /// </summary>
-            public double wRewardLeftDelay;
-
-            /// <summary>
-            /// The delay between the right head tracking (for the trial begin) and the right reward for the second chance.
-            /// </summary>
-            public double wRewardRightDelaySecondChance;
-
-            /// <summary>
-            /// The delay between the left head tracking (for the trial begin) and the left reward for the second chance.
-            /// </summary>
-            public double wRewardLeftDelaySecondChance;
-
-            /// <summary>
-            /// The duration for the center reward.
-            /// </summary>
-            public double wRewardCenterDuration;
-
-            /// <summary>
-            /// The duration for the right reward.
-            /// </summary>
-            public double wRewardRightDuration;
-
-            /// <summary>
-            /// The duration for the left reward.
-            /// </summary>
-            public double wRewardLeftDuration;
-
-            /// <summary>
-            /// The duration for the right reward second chance.
-            /// </summary>
-            public double wRewardRightDurationSecondChance;
-
-            /// <summary>
-            /// The duration for the left reward seconde chance.
-            /// </summary>
-            public double wRewardLeftDurationSecondChance;
-
-            /// <summary>
-            /// The delay between end of water reward to the begining of moving rovot to it's home position.
-            /// </summary>
-            public double wRewardToBackwardDelay;
-            */
-
             /// <summary>
             /// The pre trial time before start beep and trial starts.
             /// </summary>
             public double wPreTrialTime;
 
             /// <summary>
-            /// The duration to wait between the end of the previous trial and the begining of the next trial.
+            /// The duration to wait between the end of the previous trial and the beginning of the next trial.
             /// </summary>
             public double wPostTrialTime;
 
             /// <summary>
-            /// The time after the beep of the trial begin time and the time the rat can response with head to the center in order to begin the movement.
+            /// The time after the beep of the trial begin and the time the rat can response with head to the center in order to begin the movement.
             /// </summary>
             public double wTimeOutTime;
 
@@ -1911,12 +1822,6 @@ namespace UniJoy
             /// The robot movement duration.
             /// </summary>
             public double wDuration;
-
-            //TODOO: Maayan - Do I need this parameter?
-            /// <summary>
-            /// The delay time between the end of water center reward and the Clue sound.
-            /// </summary>
-            //public double wClueDelay;
         };
 
 

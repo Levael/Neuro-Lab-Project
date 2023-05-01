@@ -8,8 +8,8 @@ using System.Windows.Forms.DataVisualization.Charting;
 namespace UniJoy
 {
     /// <summary>
-    /// This class attempt to show the reponses psycometric reponses acoording to the user responses untill the current round.
-    /// In the case of staicases it should show as many graphs as the staircases.
+    /// This class attempt to show thepsycometric reponses according to the user responses untill the current round.
+    /// In the case of staircases it should show as many graphs as the staircases.
     /// </summary>
     class OnlinePsychGraphMaker
     {

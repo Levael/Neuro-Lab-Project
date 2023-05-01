@@ -141,6 +141,7 @@ namespace UniJoy
 
             try
             {
+                // todo: doesn't work, may be not connected without exception
                 //connect to the robot.
                 MoogController.MoogController.Connect();
                 _cntrlLoop.IsMoogConnected = true;
@@ -185,11 +186,12 @@ namespace UniJoy
             //_cntrlLoop.MoveRobotHomePosition();
 
             //create the result directory in the application path if needed.
-            if (!Directory.Exists(Application.StartupPath + "\results"))
+            if (!Directory.Exists(Application.StartupPath + @"\results")) {
                 Directory.CreateDirectory(Application.StartupPath + @"\results\");
+            }
+                
 
             //adding background image to the window.
-            // TODO: find files and set as background
             //this.BackgroundImage = Image.FromFile(Application.StartupPath + @"\unityWallpaper.jpg");
             //this._varyingControlGroupBox.BackgroundImage = Image.FromFile(Application.StartupPath + @"\unityWallpaper.jpg");
         }
@@ -815,9 +817,9 @@ namespace UniJoy
         }
 
         /// <summary>
-        /// Handler for stop experiment buttom clicked.
+        /// Handler for stop experiment button clicked.
         /// </summary>
-        /// <param name="sender">The stop buttom object.</param>
+        /// <param name="sender">The stop button object.</param>
         /// <param name="e">The args.</param>
         private void _btnStop_Click(object sender, EventArgs e)
         {
