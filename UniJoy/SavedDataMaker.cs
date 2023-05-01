@@ -64,6 +64,7 @@ namespace UniJoy
             lineBuilder.Clear();
             
             //appends all static variables names and values.
+            // TODO bug here
             foreach (string paramName in experimentData.StaticVariables.Keys)
             {
                 lineBuilder.Append(paramName);
@@ -314,10 +315,10 @@ namespace UniJoy
         /// </summary>
         public Dictionary<string, double> VaryingVariables { get; set; }
 
-        /// <summary>
+        /*/// <summary>
         /// The timings variables for one trial.
         /// </summary>
-        public ControlLoop.TrialTimings TimingsVariables { get; set; }
+        public ControlLoop.TrialTimings TimingsVariables { get; set; }*/
         
         /// <summary>
         /// AutoOption class for all Autos values.

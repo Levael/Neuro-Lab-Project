@@ -39,8 +39,6 @@
             this._protocolBrowserBtn = new System.Windows.Forms.Button();
             this._btnStart = new System.Windows.Forms.Button();
             this._varyingListBox = new System.Windows.Forms.ListBox();
-            this._addVaryingCobination = new System.Windows.Forms.Button();
-            this._removeVaryingCombination = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this._btnMakeTrials = new System.Windows.Forms.Button();
             this._btnStop = new System.Windows.Forms.Button();
@@ -48,13 +46,8 @@
             this._trialParametersGroup = new System.Windows.Forms.GroupBox();
             this._dynamicParametersPanel = new System.Windows.Forms.Panel();
             this._varyingControlGroupBox = new System.Windows.Forms.GroupBox();
-            this._btnMoveRobotSide = new System.Windows.Forms.Button();
             this._btnEnagae = new System.Windows.Forms.Button();
             this._btnPark = new System.Windows.Forms.Button();
-            this._btnResume = new System.Windows.Forms.Button();
-            this._btnPause = new System.Windows.Forms.Button();
-            this._textboxStickOnNumber = new System.Windows.Forms.TextBox();
-            this._labelStickOnNumber = new System.Windows.Forms.Label();
             this._numOfRepetitionsTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -153,26 +146,6 @@
             this._varyingListBox.Size = new System.Drawing.Size(240, 384);
             this._varyingListBox.TabIndex = 5;
             // 
-            // _addVaryingCobination
-            // 
-            this._addVaryingCobination.Location = new System.Drawing.Point(87, 409);
-            this._addVaryingCobination.Name = "_addVaryingCobination";
-            this._addVaryingCobination.Size = new System.Drawing.Size(114, 23);
-            this._addVaryingCobination.TabIndex = 6;
-            this._addVaryingCobination.Text = "Add Combination";
-            this._addVaryingCobination.UseVisualStyleBackColor = true;
-            this._addVaryingCobination.Click += new System.EventHandler(this._addVaryingCombination_Click);
-            // 
-            // _removeVaryingCombination
-            // 
-            this._removeVaryingCombination.Location = new System.Drawing.Point(204, 409);
-            this._removeVaryingCombination.Name = "_removeVaryingCombination";
-            this._removeVaryingCombination.Size = new System.Drawing.Size(123, 23);
-            this._removeVaryingCombination.TabIndex = 7;
-            this._removeVaryingCombination.Text = "Remove Combination";
-            this._removeVaryingCombination.UseVisualStyleBackColor = true;
-            this._removeVaryingCombination.Click += new System.EventHandler(this._removeVaryingCombination_Click);
-            // 
             // _btnMakeTrials
             // 
             this._btnMakeTrials.Location = new System.Drawing.Point(6, 380);
@@ -223,37 +196,20 @@
             // 
             // _varyingControlGroupBox
             // 
-            this._varyingControlGroupBox.Controls.Add(this._btnMoveRobotSide);
             this._varyingControlGroupBox.Controls.Add(this._btnEnagae);
             this._varyingControlGroupBox.Controls.Add(this._btnPark);
-            this._varyingControlGroupBox.Controls.Add(this._btnResume);
-            this._varyingControlGroupBox.Controls.Add(this._btnPause);
-            this._varyingControlGroupBox.Controls.Add(this._textboxStickOnNumber);
-            this._varyingControlGroupBox.Controls.Add(this._labelStickOnNumber);
             this._varyingControlGroupBox.Controls.Add(this._numOfRepetitionsTextBox);
             this._varyingControlGroupBox.Controls.Add(this.label5);
             this._varyingControlGroupBox.Controls.Add(this._varyingListBox);
             this._varyingControlGroupBox.Controls.Add(this._btnStart);
             this._varyingControlGroupBox.Controls.Add(this._btnMakeTrials);
-            this._varyingControlGroupBox.Controls.Add(this._addVaryingCobination);
             this._varyingControlGroupBox.Controls.Add(this._btnStop);
-            this._varyingControlGroupBox.Controls.Add(this._removeVaryingCombination);
             this._varyingControlGroupBox.Location = new System.Drawing.Point(930, 81);
             this._varyingControlGroupBox.Name = "_varyingControlGroupBox";
             this._varyingControlGroupBox.Size = new System.Drawing.Size(339, 473);
             this._varyingControlGroupBox.TabIndex = 13;
             this._varyingControlGroupBox.TabStop = false;
             this._varyingControlGroupBox.Text = "Varying Control";
-            // 
-            // _btnMoveRobotSide
-            // 
-            this._btnMoveRobotSide.Enabled = false;
-            this._btnMoveRobotSide.Location = new System.Drawing.Point(7, 67);
-            this._btnMoveRobotSide.Name = "_btnMoveRobotSide";
-            this._btnMoveRobotSide.Size = new System.Drawing.Size(75, 23);
-            this._btnMoveRobotSide.TabIndex = 18;
-            this._btnMoveRobotSide.Text = "Move Side";
-            this._btnMoveRobotSide.UseVisualStyleBackColor = true;
             // 
             // _btnEnagae
             // 
@@ -274,43 +230,6 @@
             this._btnPark.Text = "Park";
             this._btnPark.UseVisualStyleBackColor = true;
             this._btnPark.Click += new System.EventHandler(this._btnPark_Click);
-            // 
-            // _btnResume
-            // 
-            this._btnResume.Location = new System.Drawing.Point(7, 200);
-            this._btnResume.Name = "_btnResume";
-            this._btnResume.Size = new System.Drawing.Size(75, 23);
-            this._btnResume.TabIndex = 15;
-            this._btnResume.Text = "Resume";
-            this._btnResume.UseVisualStyleBackColor = true;
-            this._btnResume.Click += new System.EventHandler(this._btnResume_Click);
-            // 
-            // _btnPause
-            // 
-            this._btnPause.Location = new System.Drawing.Point(6, 170);
-            this._btnPause.Name = "_btnPause";
-            this._btnPause.Size = new System.Drawing.Size(75, 23);
-            this._btnPause.TabIndex = 14;
-            this._btnPause.Text = "Pause";
-            this._btnPause.UseVisualStyleBackColor = true;
-            this._btnPause.Click += new System.EventHandler(this._btnPause_Click);
-            // 
-            // _textboxStickOnNumber
-            // 
-            this._textboxStickOnNumber.Location = new System.Drawing.Point(269, 442);
-            this._textboxStickOnNumber.Name = "_textboxStickOnNumber";
-            this._textboxStickOnNumber.Size = new System.Drawing.Size(58, 20);
-            this._textboxStickOnNumber.TabIndex = 13;
-            this._textboxStickOnNumber.Text = "1";
-            // 
-            // _labelStickOnNumber
-            // 
-            this._labelStickOnNumber.AutoSize = true;
-            this._labelStickOnNumber.Location = new System.Drawing.Point(207, 445);
-            this._labelStickOnNumber.Name = "_labelStickOnNumber";
-            this._labelStickOnNumber.Size = new System.Drawing.Size(56, 13);
-            this._labelStickOnNumber.TabIndex = 12;
-            this._labelStickOnNumber.Text = "Stick on #";
             // 
             // _numOfRepetitionsTextBox
             // 
@@ -590,8 +509,6 @@
         private System.Windows.Forms.Button _protocolBrowserBtn;
         private System.Windows.Forms.Button _btnStart;
         private System.Windows.Forms.ListBox _varyingListBox;
-        private System.Windows.Forms.Button _addVaryingCobination;
-        private System.Windows.Forms.Button _removeVaryingCombination;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button _btnMakeTrials;
         private System.Windows.Forms.Button _btnStop;
@@ -628,10 +545,6 @@
         private System.Windows.Forms.Label _ardionoPrtWarningLabel;
         //private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox _checkBoxFixationOnly;
-        private System.Windows.Forms.Label _labelStickOnNumber;
-        private System.Windows.Forms.TextBox _textboxStickOnNumber;
-        private System.Windows.Forms.Button _btnResume;
-        private System.Windows.Forms.Button _btnPause;
         private System.Windows.Forms.Button _btnPark;
         private System.Windows.Forms.Button _btnEnagae;
         //private System.Windows.Forms.ComboBox _comboBoxStudentName;
@@ -646,6 +559,5 @@
         private System.Windows.Forms.GroupBox _groupboxGoCue;
         private System.Windows.Forms.RadioButton _radiobuttonGoCueCorrectSide;
         private System.Windows.Forms.RadioButton _radiobuttonGoCueBothSide;
-        private System.Windows.Forms.Button _btnMoveRobotSide;
     }
 }

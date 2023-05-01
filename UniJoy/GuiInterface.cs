@@ -165,8 +165,8 @@ namespace UniJoy
             //allocate the pause/resume button locker.
             _lockerPauseResumeButton = new object();
             //disable initially both pause and resume buttons until makeTrials button is pressed.
-            _btnPause.Enabled = false;
-            _btnResume.Enabled = false;
+            /*_btnPause.Enabled = false;
+            _btnResume.Enabled = false;*/
 
             //enable the make trials btn.
             _btnMakeTrials.Enabled = true;
@@ -422,8 +422,8 @@ namespace UniJoy
         {
             _btnStop.Enabled = false;
             _btnStart.Enabled = false;
-            _btnPause.Enabled = false;
-            _btnResume.Enabled = false;
+            /*_btnPause.Enabled = false;
+            _btnResume.Enabled = false;*/
             _btnMakeTrials.Enabled = true;
             _btnEnagae.Enabled = false;
             _btnPark.Enabled = true;
@@ -704,10 +704,10 @@ namespace UniJoy
                     _btnStart.Enabled = false;
                     _btnMakeTrials.Enabled = false;
                     _btnStop.Enabled = true;
-                    _btnPause.Enabled = true;
-                    _btnResume.Enabled = false;
+                    /*_btnPause.Enabled = true;
+                    _btnResume.Enabled = false;*/
                     _btnPark.Enabled = false;
-                    _btnMoveRobotSide.Enabled = false;
+                    /*_btnMoveRobotSide.Enabled = false;*/
                     #endregion
 
 
@@ -727,7 +727,7 @@ namespace UniJoy
                         ITrajectoryCreator trajectoryCreator = DecideTrajectoryCreatorByProtocolName(_selectedProtocolName);
 
                         _cntrlLoop.NumOfRepetitions = int.Parse(_numOfRepetitionsTextBox.Text.ToString());
-                        _cntrlLoop.NumOfStickOn = int.Parse(_textboxStickOnNumber.Text.ToString());
+                        /*_cntrlLoop.NumOfStickOn = int.Parse(_textboxStickOnNumber.Text.ToString());*/
                         //_cntrlLoop.PercentageOfTurnedOnLeds = double.Parse(_textboxPercentageOfTurnOnLeds.Text.ToString());
                         //_cntrlLoop.LEDBrightness = int.Parse(_textboxLEDBrightness.Text.ToString());
                         //_cntrlLoop.LEDcolorRed = int.Parse(_textBoxLedRedColor.Text.ToString());
@@ -833,10 +833,10 @@ namespace UniJoy
                 #region ENABLE_DISABLE_BUTTONS
                 _btnStop.Enabled = false;
                 _btnStart.Enabled = true;
-                _btnPause.Enabled = false;
-                _btnResume.Enabled = false;
+                /*_btnPause.Enabled = false;
+                _btnResume.Enabled = false;*/
                 _btnPark.Enabled = true;
-                _btnMoveRobotSide.Enabled = true;
+                /*_btnMoveRobotSide.Enabled = true;*/
                 #endregion
             }
         }
@@ -851,8 +851,8 @@ namespace UniJoy
             lock (_lockerPauseResumeButton)
             {
                 #region ENABLE_DISABLE_BUTTONS
-                _btnPause.Enabled = false;
-                _btnResume.Enabled = true;
+                /*_btnPause.Enabled = false;
+                _btnResume.Enabled = true;*/
                 _btnPark.Enabled = true;
                 _btnEnagae.Enabled = false;
                 #endregion
@@ -872,12 +872,12 @@ namespace UniJoy
             lock (_lockerPauseResumeButton)
             {
                 #region ENABLE_DISABLE_BUTTONS
-                _btnPause.Enabled = true;
-                _btnResume.Enabled = false;
+                /*_btnPause.Enabled = true;
+                _btnResume.Enabled = false;*/
                 _btnPark.Enabled = false;
                 _btnEnagae.Enabled = false;
                 _btnStop.Enabled = true;
-                _btnMoveRobotSide.Enabled = false;
+                /*_btnMoveRobotSide.Enabled = false;*/
                 #endregion
 
                 Globals._systemState = SystemState.RUNNING;
@@ -900,15 +900,15 @@ namespace UniJoy
                     #region DISABLE_BUTTONS
                     bool isBtnStartEnabled = _btnStart.Enabled;
                     bool isBtnStopEnabled = _btnStop.Enabled;
-                    bool isBtnPauseEnabled = _btnPause.Enabled;
+                    /*bool isBtnPauseEnabled = _btnPause.Enabled;*/
 
                     _btnStart.Enabled = false;
                     _btnStop.Enabled = false;
-                    _btnResume.Enabled = false;
-                    _btnPause.Enabled = false;
+                    /*_btnResume.Enabled = false;
+                    _btnPause.Enabled = false;*/
                     _btnEnagae.Enabled = false;
                     _btnPark.Enabled = false;
-                    _btnMoveRobotSide.Enabled = false;
+                    /*_btnMoveRobotSide.Enabled = false;*/
                     #endregion
 
                     MoogController.MoogController.Disengage();
@@ -918,11 +918,11 @@ namespace UniJoy
                     #region ENABLE_BUTTONS_BACK
                     _btnStart.Enabled = isBtnStartEnabled;
                     _btnStop.Enabled = isBtnStopEnabled;
-                    _btnResume.Enabled = false;
-                    _btnPause.Enabled = isBtnPauseEnabled;
+                    /*_btnResume.Enabled = false;
+                    _btnPause.Enabled = isBtnPauseEnabled;*/
                     _btnEnagae.Enabled = true;
                     _btnPark.Enabled = true;
-                    _btnMoveRobotSide.Enabled = true;
+                    /*_btnMoveRobotSide.Enabled = true;*/
                     #endregion
                 }
             }
@@ -943,15 +943,15 @@ namespace UniJoy
                     #region DISABLE_BUTTONS
                     bool isBtnStartEnabled = _btnStart.Enabled;
                     bool isBtnStopEnabled = _btnStop.Enabled;
-                    bool isBtnPauseEnabled = _btnPause.Enabled;
+                    /*bool isBtnPauseEnabled = _btnPause.Enabled;*/
 
                     _btnStart.Enabled = false;
                     _btnStop.Enabled = false;
-                    _btnResume.Enabled = false;
-                    _btnPause.Enabled = false;
+                    /*_btnResume.Enabled = false;
+                    _btnPause.Enabled = false;*/
                     _btnEnagae.Enabled = false;
                     _btnPark.Enabled = false;
-                    _btnMoveRobotSide.Enabled = false;
+                    /*_btnMoveRobotSide.Enabled = false;*/
                     #endregion
 
                     try
@@ -970,8 +970,8 @@ namespace UniJoy
                     _btnStart.Enabled = isBtnStartEnabled;
                     _btnStop.Enabled = isBtnStopEnabled;
                     //if paused and then parked and engaged in the middle of the experiment.
-                    if (_isEngaged && !_btnStop.Enabled && !_btnStart.Enabled) _btnResume.Enabled = true;
-                    _btnPause.Enabled = isBtnPauseEnabled;
+                    /*if (_isEngaged && !_btnStop.Enabled && !_btnStart.Enabled) _btnResume.Enabled = true;
+                    _btnPause.Enabled = isBtnPauseEnabled;*/
                     _btnEnagae.Enabled = true;
                     _btnPark.Enabled = true;
                     #endregion
@@ -1269,8 +1269,8 @@ namespace UniJoy
         private void ShowVaryingControlsOptions(bool show)
         {
             this._varyingListBox.Visible = show;
-            this._addVaryingCobination.Visible = show;
-            this._removeVaryingCombination.Visible = show;
+            /*this._addVaryingCobination.Visible = show;
+            this._removeVaryingCombination.Visible = show;*/
         }
 
         /// <summary>

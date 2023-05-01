@@ -224,8 +224,11 @@ namespace UniJoy
 
         /// <summary>
         /// The number of stick on number for each specific value in the optional values for rounds (must devide NumOfRepetitions).
+        /// CHANGE LATER
         /// </summary>
-        public int NumOfStickOn { get; set; }
+        // todo 
+        public int NumOfStickOn = 1;
+        //public int NumOfStickOn { get; set; }
 
         public bool IsMoogConnected { get; set; }
 
@@ -285,11 +288,6 @@ namespace UniJoy
         /// </summary>
         private Dictionary<string, string> _soundPlayerPathDB;
 
-        /// <summary>
-        /// Object for handles WindowsMediaPlayer controls to play mp3 files.
-        /// </summary>
-        private WindowsMediaPlayer _windowsMediaPlayer;
-
         //Maayan Edit
         //todoo::there is the rat sample or something like that...
         private IUserInputController _remoteController;
@@ -344,14 +342,8 @@ namespace UniJoy
                 SetPointDelegate = _mainGuiControlsDelegatesDictionary["OnlinePsychoGraphSetPoint"],
                 ChartControl = _mainGuiInterfaceControlsDictionary["OnlinePsychoGraph"] as Chart
             };
-
-            //initialize the MediaPlayer controller and the DB of sound effects and their path.
-            // todo ??? where
-            _soundPlayerPathDB = new Dictionary<string, string>();
-            LoadAllSoundPlayers();
-            _windowsMediaPlayer = new WindowsMediaPlayer();
-
-            //Task.Run(() => TryConnectToUnityEngine());
+            
+            Task.Run(() => TryConnectToUnityEngine());
         }
         #endregion CONTRUCTOR
 
@@ -483,7 +475,7 @@ namespace UniJoy
                         //choose the random combination index for the current trial.
                         _currentVaryingTrialIndex = _varyingIndexSelector.ChooseRandomCombination();
 
-                        //craetes the trajectory for both robots for the current trial if not one of the training protocols.
+                        //creates the trajectory for both robots for the current trial if not one of the training protocols.
                         _currentTrialTrajectories = _trajectoryCreatorHandler.CreateTrajectory(_currentVaryingTrialIndex);
 
                         //reset the stickOnNumber.
@@ -538,18 +530,13 @@ namespace UniJoy
                                     //update the number of head fixation breaks.
                                     _totalHeadFixationBreaks++;
                                 }
-
-                                //todoo::check if this use is needed.
-                                //after the end of rewrad wait a time delay before backword movement to the home poistion.
-                                //RewardToBackwardDelayStage();
                             }
                         }
 
-                        //todoo::need to uncomment it no?
                         //sounds the beep with the missing start gead in the center.
                         else
                         {
-                            Task.Run(() => { _windowsMediaPlayer.URL = _soundPlayerPathDB["WrongAnswer"]; _windowsMediaPlayer.controls.play(); });
+                            AudioResponse.PlayTimeOutSound();
                             // skip this trial.
                             continue;
                         }
@@ -781,6 +768,7 @@ namespace UniJoy
 
 
         // todo: write this function in a more generic way.
+        // TODO delete?
         /// <summary>
         /// Waiting the rat to response the movement direction abd update the _totalCorrectAnswers counter.
         /// <returns>The rat decision value and it's correctness.</returns>
@@ -857,9 +845,8 @@ namespace UniJoy
                         Task.Run(() =>
                         {
                             _logger.Info("Start playing error sound");
-
-                            _windowsMediaPlayer.URL = _soundPlayerPathDB["WrongAnswer"];
-                            _windowsMediaPlayer.controls.play();
+                            
+                            AudioResponse.PlayWrongAnswerSound();
 
                             _logger.Info("End playing error sound");
                         });
@@ -920,9 +907,8 @@ namespace UniJoy
                         Task.Run(() =>
                         {
                             _logger.Info("Start playing wrong answer");
-
-                            _windowsMediaPlayer.URL = _soundPlayerPathDB["WrongAnswer"];
-                            _windowsMediaPlayer.controls.play();
+                            
+                            AudioResponse.PlayWrongAnswerSound();
 
                             _logger.Info("End playing wrong answer");
                         });
@@ -950,114 +936,6 @@ namespace UniJoy
         }
 
         /// <summary>
-        /// The reward left stage is happening if the rat decide the correct stimulus side.
-        /// <param name="autoReward">Indication if to give the reward with no delay.</param>
-        /// <param name="RewardSound">Indication ig to give the reward sound during the reward.</param>
-        /// <param name="secondChance">Indicate if it is reward for the second chance.</param>
-        /// <param name="responseReward">Indicates if the reward is due to a response or due to the center stability stage.</param>
-        /// </summary>
-        public void RewardLeftStage(bool autoReward = false, bool RewardSound = false, bool secondChance = false, bool responseReward = false)
-        {
-            _logger.Info("RewardLeftStage begin with AutoReward  = " + autoReward + ".");
-
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
-            //update the global details listview with the current stage.
-            _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
-            _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Getting Reward (Left)");
-#endif
-            //TODOO: Maayan - Do I need this?
-            /*if (!secondChance)
-                Reward(RewardPosition.Left, _currentTrialTimings.wRewardLeftDuration, _currentTrialTimings.wRewardLeftDelay, autoReward, RewardSound, responseReward);
-            else
-                Reward(RewardPosition.Left, _currentTrialTimings.wRewardLeftDurationSecondChance, _currentTrialTimings.wRewardLeftDelaySecondChance, false, RewardSound, responseReward);
-                */
-
-            _logger.Info("RewardLeftStage ended.");
-        }
-
-        /// <summary>
-        /// The reward right stage is happening if the rat decide the correct stimulus side.
-        /// <param name="autoReward">Indication if to give the reward with no delay.</param>
-        /// <param name="RewardSound">Indication ig to give the suto reard sound during the reward.</param>
-        /// <param name="secondChance">Indicate if it is reward for the second chance.</param>
-        /// <param name="responseReward">Indicates if the reward is due to a response or due to the center stability stage.</param>
-        /// </summary>
-        public void RewardRightStage(bool autoReward = false, bool RewardSound = false, bool secondChance = false, bool responseReward = false)
-        {
-            _logger.Info("RewardRightStage begin with AutoReward  = " + autoReward + ".");
-
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
-            //update the global details listview with the current stage.
-            _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
-            _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Getting Reward (Right)");
-#endif
-            //TODOO: Maayan - Do I need this?
-            /*if (!secondChance)
-                Reward(RewardPosition.Right, _currentTrialTimings.wRewardRightDuration, _currentTrialTimings.wRewardRightDelay, autoReward, RewardSound, responseReward);
-            else
-                Reward(RewardPosition.Right, _currentTrialTimings.wRewardRightDurationSecondChance, _currentTrialTimings.wRewardRightDelaySecondChance, false, RewardSound, responseReward);
-                */
-
-            _logger.Info("RewardRightStage ended.");
-        }
-
-        /// <summary>
-        /// The reward center stage is happening if the rat head was consistently stable in the center during the movement.
-        /// <param name="autoReward">Indication if to give the reward with no delay.</param>
-        /// <param name="autoRewardSound">Indication ig to give the suto reard sound during the reward.</param>
-        /// <param name="responseReward">Indicates if the reward is due to a response or due to the center stability stage.</param>
-        /// </summary>
-        public void RewardCenterStage(bool autoReward = false, bool autoRewardSound = false, bool secondChance = false, bool responseReward = false)
-        {
-            _logger.Info("RewardCenterStage begin with AutoReward  = " + autoReward + ".");
-
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
-            //update the global details listview with the current stage.
-            _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
-            _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Getting Reward (Center)");
-#endif
-            //TODOO: Maayan - Do I need this?
-            //Reward(RewardPosition.Center, _currentTrialTimings.wRewardCenterDuration, _currentTrialTimings.wRewardCenterDelay, autoReward, autoRewardSound, responseReward);
-
-            _logger.Info("RewardCenterStage ended.");
-        }
-
-        /// <summary>
-        /// The stage for the time between the end of the reward to the beginning moving to the robot to it's home position.
-        /// </summary>
-        private void RewardToBackwardDelayStage()
-        {
-            _logger.Info("RewardToBackwardDelayStage begin.");
-
-            //TODOO: Maayan - Do I need this?
-            /*Task waitRewardBackwardDelay = new Task(() =>
-            {
-                Thread.Sleep((int)(_currentTrialTimings.wRewardToBackwardDelay * 1000));
-            });*/
-
-            Task updateBackwordTrajectory = new Task(() =>
-            {
-                //wait the half of the time for the pause after the robt end moving forward (and than write the JBI file).
-                Thread.Sleep((int)(250));
-
-                _logger.Info("Updating backward trajectory file begin.");
-                UpdateRobotHomePositionBackwordsJBIFile();
-                _logger.Info("Updating backward trajectory file begin.");
-            });
-
-            //update the JBI file after the little delay.
-            updateBackwordTrajectory.Start();
-            //TODOO: Maayan - Do I need this?
-            //waitRewardBackwardDelay.Start();
-
-            //wait the other half time and the JBI writing file time.
-            //TODOO: Maayan - Do I need this?
-            //waitRewardBackwardDelay.Wait();
-            updateBackwordTrajectory.Wait();
-            _logger.Info("RewardToBackwardDelayStage ended.");
-        }
-
-        /// <summary>
         /// Moving the robot stage (it the subject pressed start in the timeOut time and was stable in the center for startDelay time).
         /// This function also , in paralleled to the robot moving , checks that the rat head was consistently in the center during the duration time of the movement time.
         /// </summary>
@@ -1066,11 +944,13 @@ namespace UniJoy
         {
             _logger.Info("Moving the robot with duration time and head center stability check stage is begin.");
 
+/*
 #if UPDATE_GLOBAL_DETAILS_LIST_VIEW
             //update the global details listview with the current stage.
             _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
             _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Stimulus Duration");
 #endif
+*/
 
             //start moving the robot according to the stimulus type.
             _logger.Info("Send Executing robot trajectory data start command");
@@ -1091,6 +971,7 @@ namespace UniJoy
             });
             */
             
+            // forwardMovementTask
             if (IsMoogConnected)
             {
                 Task forwardMovementTask;
@@ -1234,10 +1115,7 @@ namespace UniJoy
         public bool WaitForStartButtonToBePressed()
         {
             //Sounds the start beep. Now waiting for the subject to press start button
-            Task.Run(() =>
-            {
-                Console.Beep(2000, 200);
-            });
+            AudioResponse.PlayStartTrialSound();
 
             //TODOO: Do I need this?
             //write the beep start event to the AlphaOmega.
@@ -1584,7 +1462,7 @@ namespace UniJoy
             */
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Load all mp3 files that the MediaPlayer object should use.
         /// </summary>
         private void LoadAllSoundPlayers()
@@ -1595,7 +1473,7 @@ namespace UniJoy
             _soundPlayerPathDB.Add("MissingAnswer", Application.StartupPath + @"\SoundEffects\Wrong Buzzer Sound Effect (Raised pitch 400 percent and -3db).wav");
             _soundPlayerPathDB.Add("Ding-Left", Application.StartupPath + @"\SoundEffects\Ding Sound Effects - Left (raised pitch 900 percent).wav");
             _soundPlayerPathDB.Add("Ding-Right", Application.StartupPath + @"\SoundEffects\Ding Sound Effects - Right (raised pitch 900 percent).wav");
-        }
+        }*/
 
         /// <summary>
         /// Determine the current trial stimulus type bt the stimulus type variable status.

@@ -1,6 +1,7 @@
 ﻿BUGS:
 1) delete heading direction throws exeption
 2) no resize for window in fullscreen mode
+3) mine, btw: 'savedDataMarker' 67 line
 
 CHANGES TO DO:
 1) change main window appearance
@@ -10,6 +11,7 @@ CHANGES TO DO:
 5) remove (or at least comment) "stick on" option (related to trials)
 6) instead of Rat name (in txt file with experiment data) optionally store student + test subject names. Make fields for this
 7) display where experiment data is saved
+8) immediately inform if MOOG not connected (start from a banal check for ethernet cable connection)
 
 QUESTIONS:
 1) where all recieved data is stored? And when is it saved?
