@@ -10,7 +10,7 @@ namespace Trajectories
 {
     /// <summary>
     /// This class is called in each trial in order to create the trajectories to the current trial
-    /// according to the current trial paramaters.
+    /// according to the current trial parameters.
     /// </summary>
     public class TrajectoryCreatorHandler
     {

@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="AudioResponse.cs" />
     <Compile Include="ControlLoop.cs" />
+    <Compile Include="ControlLoopUPD.cs" />
     <Compile Include="ExcelProtocolConfigFileLoader.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="GuiInterface.cs">

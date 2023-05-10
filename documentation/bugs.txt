@@ -2,16 +2,19 @@
 1) delete heading direction throws exeption
 2) no resize for window in fullscreen mode
 3) mine, btw: 'savedDataMarker' 67 line
+4) ControlLoop.PostTrialStage - PostTrialStage ended. TrialSucceed = False    <- always false, shouldn't be
+5) log4net какую-то хрень творит, либо починить, либо удалить
 
 CHANGES TO DO:
 1) change main window appearance
 2) psycho graph - instead of range (-100, 100) make (=25, 25)
-3) maybe change audio signals for correct/incorrec answers
+3) maybe change audio signals for correct/incorrect answers
 4) debug win buttons form make in the same main form but not separate (two possible inputs: btns or keyboard (numpad))
 5) remove (or at least comment) "stick on" option (related to trials)
 6) instead of Rat name (in txt file with experiment data) optionally store student + test subject names. Make fields for this
 7) display where experiment data is saved
 8) immediately inform if MOOG not connected (start from a banal check for ethernet cable connection)
+9) rewrite gui info presentation
 
 QUESTIONS:
 1) where all recieved data is stored? And when is it saved?

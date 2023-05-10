@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace UniJoy
 {
     /// <summary>
-    /// This class attempt to show thepsycometric reponses according to the user responses untill the current round.
+    /// This class attempt to show the psychometric responses according to the user responses until the current round.
     /// In the case of staircases it should show as many graphs as the staircases.
     /// </summary>
     class OnlinePsychGraphMaker
     {
         /// <summary>
-        /// The varying parametr names represents series in the chart.
+        /// The varying parameter names represents series in the chart.
         /// </summary>
         public List<string> VaryingParametrsNames { get; set; }
 
@@ -149,7 +147,7 @@ namespace UniJoy
     }
 
     /// <summary>
-    /// Representing a resion details.
+    /// Representing a region details.
     /// </summary>
     public class Region
     {
@@ -159,7 +157,7 @@ namespace UniJoy
         public double LowBound { get; set; }
 
         /// <summary>
-        /// The increament for the steps in the bound.
+        /// The increment for the steps in the bound.
         /// </summary>
         public double Increament { get; set; }
 
@@ -170,7 +168,7 @@ namespace UniJoy
     }
 
     /// <summary>
-    /// Series Details represent the trade of sucess vs answers in a point(heading direction).
+    /// Series Details represent the trade of success vs answers in a point(heading direction).
     /// </summary>
     public class SeriesDetail
     {

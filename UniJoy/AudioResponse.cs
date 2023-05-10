@@ -13,10 +13,7 @@ namespace UniJoy
         
         private static void PlaySound(int freq, int duration) {
             // play sound in a new thread
-            Task.Run(() =>
-            {
-                Console.Beep(freq, duration);
-            });
+            Task.Run(() => Console.Beep(freq, duration));
         }
         
         // may be regular 

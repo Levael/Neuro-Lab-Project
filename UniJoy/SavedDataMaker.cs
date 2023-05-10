@@ -121,95 +121,14 @@ namespace UniJoy
             _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
             lineBuilder.Clear();
 
-            /*//append the application version number.
-            lineBuilder.Append("Application Version Number:");
-            lineBuilder.Append(trialData.ApplicationVersionNumber);
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();*/
-
-            /*//append the protocol full name
-            lineBuilder.Append("Protocol Name:");
-            lineBuilder.Append(trialData.ProtocolName);
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();
-
-            //append the rat name.
-            lineBuilder.Append("Rat Name:");
-            lineBuilder.Append(trialData.TesteeName);
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();
-
-            //append the student name.
-            lineBuilder.Append("student Name:");
-            lineBuilder.Append(trialData.ResearcherName);
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();*/
-
             //append the rat decision for the stimulus direction.
-            lineBuilder.Append("Rat Decison:");
-            lineBuilder.Append(trialData.RatDecison);
+            lineBuilder.Append("Human Decision:");
+            lineBuilder.Append(trialData.HumanDecision);
             _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
             lineBuilder.Clear();
-
-            //append the stick number value.
-            /*lineBuilder.Append("StickNumber:");
-            lineBuilder.Append(trialData.StickOnNumber);
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();*/
-
-            /*//append the stick number value.
-            lineBuilder.Append("NumOfRepetitions:");
-            lineBuilder.Append(trialData.NumOfRepetitions);
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();*/
-
-            /*//append the auto's option statuses in the current trial.
-            lineBuilder.Append(trialData.AutosOptions.ToString());
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();
-
-            //append the special modes options in the current trial.
-            lineBuilder.Append(trialData.SpecialModes.ToString());
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();
-
-            //append the sounds modes options in the current trial.
-            lineBuilder.Append(trialData.SoundsMode.ToString());
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();*/
-
-            /*//appends all static variables names and values.
-            foreach (string paramName in trialData.StaticVariables.Keys)
-            {
-                lineBuilder.Append(paramName);
-                lineBuilder.Append(":");
-                lineBuilder.Append(trialData.StaticVariables[paramName]);
-                lineBuilder.Append(" ");
-
-                _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-                lineBuilder.Clear();
-            }
-
-            //append all varying variables names and values.
-            foreach (string paramName in trialData.VaryingVariables.Keys)
-            {
-                lineBuilder.Append(paramName);
-                lineBuilder.Append(":");
-                lineBuilder.Append(trialData.VaryingVariables[paramName]);
-
-                _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-                lineBuilder.Clear();
-            }*/
 
             //save all trial events with their real time timings.
             SaveTheRealTimingEvents(trialData.TrialEventsTiming);
-
-            //save the total manual reward was given during all the experiment.
-            /*lineBuilder.Append("TotalManualReward");
-            lineBuilder.Append(":");
-            lineBuilder.Append(trialData.TotalHabdRewardTime);
-            _currentSavedFileStreamWriter.WriteLine(lineBuilder.ToString());
-            lineBuilder.Clear();*/
 
             //flush the text to be written immediately.
             _currentSavedFileStreamWriter.Flush();
@@ -344,7 +263,7 @@ namespace UniJoy
         /// <summary>
         /// The rat decision for the stimulus direction.
         /// </summary>
-        public ControlLoop.RatDecison RatDecison { get; set; }
+        public ControlLoop.HumanDecision HumanDecision { get; set; }
 
         /// <summary>
         /// The trial number in the experiment.

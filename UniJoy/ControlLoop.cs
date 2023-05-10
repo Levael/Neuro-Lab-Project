@@ -195,7 +195,7 @@ namespace UniJoy
         /// The current rat sampling response come from the Noldus.
         /// The sampling rate is readen from solution settings configuration.
         /// </summary>
-        private PressType _currentUserResponse;
+        private PressType _currentResponse;
 
         /// <summary>
         /// The rat decision about the current trial stimulus direction.
@@ -268,10 +268,10 @@ namespace UniJoy
         /// </summary>
         public bool EnableRightLeftMustEquals { get; set; }
 
-        /// <summary>
+        /*/// <summary>
         /// Indicates the autos options that are commanded in the real time (when the code use it at the conditions and not only if the user change it betweens).
         /// </summary>
-        public AutosOptions _autosOptionsInRealTime { get; set; }
+        public AutosOptions _autosOptionsInRealTime { get; set; }*/
 
         /// <summary>
         /// Indicates the special modes that are commanded in the real time.
@@ -343,7 +343,7 @@ namespace UniJoy
                 ChartControl = _mainGuiInterfaceControlsDictionary["OnlinePsychoGraph"] as Chart
             };
             
-            Task.Run(() => TryConnectToUnityEngine());
+            /*Task.Run(() => TryConnectToUnityEngine());*/
         }
         #endregion CONTRUCTOR
 
@@ -391,7 +391,7 @@ namespace UniJoy
                     TesteeName = TesteeName,
                     ResearcherName = ResearcherName,
                     NumOfRepetitions = NumOfRepetitions,
-                    AutosOptions = _autosOptionsInRealTime,
+                    /*AutosOptions = _autosOptionsInRealTime,*/
                     SpecialModes = _specialModesInRealTime,
                     SoundsMode = _soundsMode
                 });
@@ -408,13 +408,8 @@ namespace UniJoy
             };
             _onlinePsychGraphMaker.InitSerieses();
 
-/*#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
-            //reset the amount of water measurement interactive panel.
-            _mainGuiInterfaceControlsDictionary["SetWaterRewardsMeasure"].BeginInvoke(
-              _mainGuiControlsDelegatesDictionary["SetWaterRewardsMeasure"], true);
-#endif*/
 
-            //run the main control loop function in other thread from the main thread ( that handling events and etc).
+            //run the main control loop function in other thread from the main thread (that handling events and etc).
             _stopAfterTheEndOfTheCurrentTrial = false;
             Globals._systemState = SystemState.RUNNING;
             Task.Run(() => MainControlLoop());
@@ -496,7 +491,7 @@ namespace UniJoy
                             return;
                         }
 
-                        //Sending all needed data to all interfaces and makes the beep sound.
+                        //Sending all needed data to all interfaces
                         PreTrialStage();
 
                         //TODOO:WAIT FOR THE START PRESS BUTTON
@@ -508,18 +503,18 @@ namespace UniJoy
                             {
                                 //update the state of the rat decision.
                                 //todoo::chnage that _currentRatDecision
-                                //_currentRatDecision = RatDecison.DurationTime;
+                                //_currentRatDecision = RatDecision.DurationTime;
 
                                 //moving the robot with duration time , and checking for the stability of the head in the center.
                                 if (MovingTheRobotDurationWithHeadCenterStabilityStage())
                                 {
                                     //update the number of total head in the center with stability during the duration time.
                                     _totalHeadStabilityInCenterDuringDurationTime++;
-                                    //_currentRatDecision = RatDecison.PassDurationTime;
+                                    //_currentRatDecision = RatDecision.PassDurationTime;
 
                                     {
                                         //wait the rat to response to the movement during the response time.
-                                        //Tuple<RatDecison, bool> decision = ResponseTimeStage();
+                                        //Tuple<RatDecision, bool> decision = ResponseTimeStage();
                                         Tuple<PressType, bool> decision = ResponseTimeStage();
                                     }
                                 }
@@ -580,12 +575,6 @@ namespace UniJoy
             //TODOO : change the index of the trial to be identical to the trial number in the result file.
             _logger.Info("Initialization Stage of trial #" + (_totalHeadStabilityInCenterDuringDurationTime + 1));
 
-/*#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
-            //update the global details listview with the current stage.
-            _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
-            _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Intialization");
-#endif*/
-
             //determine all current trial timings and delays.
             _currentTrialTimings = DetermineCurrentTrialTimings();
             CheckDurationTimeAcceptableValue();
@@ -593,13 +582,13 @@ namespace UniJoy
             //determine current stimulus type.
             _currentTrialStimulusType = DetermineCurrentStimulusType();
 
-            //set the reposne to the stimulus direction as no entry to descision stage (and change it after if needed as well).
-            //todoo::chnage that _currentRatDecision
-            //_currentRatDecision = RatDecison.NoEntryToResponseStage;
+            //set the response to the stimulus direction as no entry to decision stage (and change it after if needed as well).
+            //todo::change that _currentRatDecision
+            //_currentRatDecision = RatDecision.NoEntryToResponseStage;
 
             //set the auto option to default values.
-            _autosOptionsInRealTime = new AutosOptions();
-            //initialize the trial spcial mode options.
+            /*_autosOptionsInRealTime = new AutosOptions();*/
+            //initialize the trial special mode options.
             _specialModesInRealTime = new SpecialModes();
             //initialize the trial sounds mode options.
             _soundsMode = new SoundsMode();
@@ -664,13 +653,7 @@ namespace UniJoy
         /// </summary>
         public void PreTrialStage()
         {
-            _logger.Info("Pre trial stage begin.");
-
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
-            //update the global details listview with the current stage.
-            _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
-            _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Intialization");
-#endif
+            //_logger.Info("Pre trial stage begin.");
 
             //initialize the current time parameters and all the current trial variables.
             ResetVariables();
@@ -714,25 +697,25 @@ namespace UniJoy
             DetermineCurrentStimulusAnswer();
             
             _remoteController.FlushBuffer();
-            _currentUserResponse = PressType.None;
+            _currentResponse = PressType.None;
             Stopwatch sw = new Stopwatch();
             
             sw.Start();
             // wait for the press (until the response is NOT None) or until the time is up
-            while (sw.ElapsedMilliseconds < (int)(1000 * _currentTrialTimings.wResponseTime) && _currentUserResponse == PressType.None)
+            while (sw.ElapsedMilliseconds < (int)(1000 * _currentTrialTimings.wResponseTime) && _currentResponse == PressType.None)
             {
                 // get the response (if there is one) from the remote controller.
-                _currentUserResponse = _remoteController.SubjectChoice();
+                _currentResponse = _remoteController.SubjectChoice();
             }
             sw.Stop();
             
             // if the response is None, then the user did not respond in time.
-            if (_currentUserResponse == PressType.None)
+            if (_currentResponse == PressType.None)
             {
                 AudioResponse.PlayTimeOutSound();
                 // todo: understand the role of this line here - why need to send the command to the unity engine? 
                 //send command to UnityEngine that it should clean all it's rendered data.
-                _unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand, VisualOperationCommand.CleanScreen);
+                //_unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand, VisualOperationCommand.CleanScreen);
                 _logger.Info("ResponseTimeStage end. User did not respond in time.");
                 return new Tuple<PressType, bool>(PressType.None, false);
             }
@@ -744,7 +727,7 @@ namespace UniJoy
             //get the current stimulus direction.
             double currentHeadingDirection = double.Parse(GetVariableValue("HEADING_DIRECTION"));
             // if the response is correct
-            bool isCorrect = _currentUserResponse == _correctDecision;
+            bool isCorrect = _currentResponse == _correctDecision;
             if (isCorrect)
             {
                 // play the sound for correct answer.
@@ -762,195 +745,20 @@ namespace UniJoy
                 _onlinePsychGraphMaker.AddResult("Heading Direction", _currentTrialStimulusType, currentHeadingDirection, AnswerStatus.WRONG);
             }
             // log the response data to the log file.
-            _logger.Info($"ResponseTimeStage end. User responded in time. User response: {_currentUserResponse}. Correct answer: {_correctDecision}. Is correct: {isCorrect}.");
-            return new Tuple<PressType, bool>(_currentUserResponse, isCorrect);
+            _logger.Info($"ResponseTimeStage end. User responded in time. User response: {_currentResponse}. Correct answer: {_correctDecision}. Is correct: {isCorrect}.");
+            return new Tuple<PressType, bool>(_currentResponse, isCorrect);
         }
 
 
-        // todo: write this function in a more generic way.
-        // TODO delete?
         /// <summary>
-        /// Waiting the rat to response the movement direction abd update the _totalCorrectAnswers counter.
-        /// <returns>The rat decision value and it's correctness.</returns>
-        /// </summary>
-        public Tuple<RatDecison, bool> ResponseTimeStageRat()
-        {
-            _logger.Info("ResponseTimeStageRat begin.");
-
-            //if not trainig continue.
-            if (GetVariableValue("STIMULUS_TYPE") == "0")
-            {
-                //delete that line for stim 0.
-                //return new Tuple<RatDecison, bool>(RatDecison.NoDecision, false);
-            }
-
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
-            //update the global details listview with the current stage.
-            _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
-            _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Waiting for Response");
-#endif
-
-            //get the current stimulus direction.
-            double currentHeadingDirection = double.Parse(GetVariableValue("HEADING_DIRECTION"));
-            // ~(Michael Saar)~ here the correct answer is determined. the correct choice is stored in the variable _correctDecision.
-            DetermineCurrentStimulusAnswer();
-
-            _remoteController.FlushBuffer();
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            //time to wait for the moving rat response. if decided about a side so break and return the decision and update the _totalCorrectAnsers.
-            while (sw.ElapsedMilliseconds < (int)(1000 * _currentTrialTimings.wResponseTime))
-            {
-                _currentUserResponse = _remoteController.SubjectChoice();
-
-                if (_currentUserResponse.Equals(PressType.Left))
-                {
-                    //Console.Beep(1500, 500);
-
-                    //increase the total choices for wrong or correct choices (some choices).
-                    _totalChoices++;
-
-                    //update the current rat decision state.
-                    //Console.Beep(10000, 100);
-                    _currentRatDecision = PressType.Left;
-
-                    //add the response real time to the real times dictionary.
-                    _trialEventRealTiming.Add("RatDecision", _controlLoopTrialTimer.ElapsedMilliseconds);
-
-                    //TODOO: Do I need this?
-                    //write the event that te rat enter it's head to the left to the AlphaOmega.
-                    //_alphaOmegaEventsWriter.WriteEvent(true, AlphaOmegaEvent.HeadEnterLeft);
-
-                    if (_correctDecision.Equals(PressType.Left))
-                    {
-                        //todo: play sound for correct answer.
-
-                        //increase the total correct answers.
-                        _totalCorrectAnswers++;
-
-                        //update the psycho online graph.
-                        _onlinePsychGraphMaker.AddResult("Heading Direction", _currentTrialStimulusType, currentHeadingDirection, AnswerStatus.CORRECT);
-
-                        _logger.Info("ResponseTimeStage ended. RatDecison = RatDecison.Left" + "; Correct = True.");
-                        //send command to UnityEngine that it should clean all it's rendered data.
-                        _unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand, VisualOperationCommand.CleanScreen);
-                        return new Tuple<RatDecison, bool>(RatDecison.Left, true);
-                    }
-
-                    _onlinePsychGraphMaker.AddResult("Heading Direction", _currentTrialStimulusType, currentHeadingDirection, AnswerStatus.WRONG);
-
-                    if (EnableErrorSound)
-                    {
-                        //error sound if needed.
-                        Task.Run(() =>
-                        {
-                            _logger.Info("Start playing error sound");
-                            
-                            AudioResponse.PlayWrongAnswerSound();
-
-                            _logger.Info("End playing error sound");
-                        });
-
-                        //todoo:: add a.o event?
-                        //_alphaOmegaEventsWriter.WriteEvent(true, AlphaOmegaEvent.AudioWrong);
-                        _trialEventRealTiming.Add("AudioWrong", _controlLoopTrialTimer.ElapsedMilliseconds);
-
-                        _soundsMode.ErrorChoiceSoundOn = true;
-                    }
-
-                    _logger.Info("ResponseTimeStage ended. RatDecison = RatDecison.Left" + "; Correct = False.");
-                    //send command to UnityEngine that it should clean all it's rendered data.
-                    _unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand, VisualOperationCommand.CleanScreen);
-                    return new Tuple<RatDecison, bool>(RatDecison.Left, false);
-                }
-
-                else if (_currentUserResponse.Equals(PressType.Right))
-                {
-                    //Console.Beep(900, 500);
-
-                    //update current rat decision state.
-                    _currentRatDecision = PressType.Right;
-
-                    //increase the total choices for wromg or correct choices (some choices).
-                    _totalChoices++;
-
-                    //add the response real time to the real times dictionary.
-                    _trialEventRealTiming.Add("RatDecision", _controlLoopTrialTimer.ElapsedMilliseconds);
-                    //Console.Beep(10000,100);
-
-                    //TODOO: Do I need this?
-                    //write the event that te rat enter it's head to the right to the AlphaOmega.
-                    //_alphaOmegaEventsWriter.WriteEvent(true, AlphaOmegaEvent.HeadEnterRight);
-
-                    if (_correctDecision.Equals(PressType.Right))
-                    {
-                        // todo: play sound for correct answer.
-                        
-                        //increase the total coreect answers.
-                        _totalCorrectAnswers++;
-
-                        //update the psycho online graph.
-                        _onlinePsychGraphMaker.AddResult("Heading Direction", _currentTrialStimulusType, currentHeadingDirection, AnswerStatus.CORRECT);
-
-                        _logger.Info("ResponseTimeStage ended. RatDecison = RatDecison.Right" + "; Correct = True.");
-                        //send command to UnityEngine that it should clean all it's rendered data.
-                        _unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand, VisualOperationCommand.CleanScreen);
-                        return new Tuple<RatDecison, bool>(RatDecison.Right, true);
-                    }
-
-                    //update the psycho online graph.
-                    _onlinePsychGraphMaker.AddResult("Heading Direction", _currentTrialStimulusType, currentHeadingDirection, AnswerStatus.WRONG);
-
-                    //error sound if needed.
-                    if (EnableErrorSound)
-                    {
-                        Task.Run(() =>
-                        {
-                            _logger.Info("Start playing wrong answer");
-                            
-                            AudioResponse.PlayWrongAnswerSound();
-
-                            _logger.Info("End playing wrong answer");
-                        });
-
-                        //todoo::add a.o event
-                        //_alphaOmegaEventsWriter.WriteEvent(true, AlphaOmegaEvent.AudioWrong);
-                        _trialEventRealTiming.Add("AudioWrong", _controlLoopTrialTimer.ElapsedMilliseconds);
-
-                        _soundsMode.ErrorChoiceSoundOn = true;
-                    }
-
-                    _logger.Info("ResponseTimeStage ended. RatDecison = RatDecison.Right" + "; Correct = False.");
-                    //send command to UnityEngine that it should clean all it's rendered data.
-                    _unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand, VisualOperationCommand.CleanScreen);
-                    return new Tuple<RatDecison, bool>(RatDecison.Right, false);
-                }
-            }
-
-            //send command to UnityEngine that it should clean all it's rendered data.
-            _unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand, VisualOperationCommand.CleanScreen);
-
-            _logger.Info("ResponseTimeStage ended. RatDecison = RatDecison.NoDecision; Correct = False.");
-            _currentRatDecision = PressType.None;
-            return new Tuple<RatDecison, bool>(RatDecison.NoDecision, false);
-        }
-
-        /// <summary>
-        /// Moving the robot stage (it the subject pressed start in the timeOut time and was stable in the center for startDelay time).
-        /// This function also , in paralleled to the robot moving , checks that the rat head was consistently in the center during the duration time of the movement time.
+        /// Moving the robot stage (if the subject pressed start in the timeOut time and was stable in the center for startDelay time).
+        /// This function also, in paralleled to the robot moving, checks that the rat head was consistently in the center during the duration time of the movement time.
         /// </summary>
         /// <returns>True if the head was stable consistently in the center during the movement time.</returns>
         public bool MovingTheRobotDurationWithHeadCenterStabilityStage()
         {
             _logger.Info("Moving the robot with duration time and head center stability check stage is begin.");
 
-/*
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
-            //update the global details listview with the current stage.
-            _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
-            _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Stimulus Duration");
-#endif
-*/
 
             //start moving the robot according to the stimulus type.
             _logger.Info("Send Executing robot trajectory data start command");
@@ -972,8 +780,8 @@ namespace UniJoy
             */
             
             // forwardMovementTask
-            if (IsMoogConnected)
-            {
+            /*if (IsMoogConnected)
+            {*/
                 Task forwardMovementTask;
                 //Task.Run(() =>
                 //{
@@ -983,6 +791,7 @@ namespace UniJoy
                      _logger.Info("Sending to MOOG forward movement Task --begin"); // ~(Michael Saar)~
                      int currentTrialTrajectoriesSize = _currentTrialTrajectories.Item1.Count();
                      double MOTION_BASE_CENTER = -0.22077500;
+                     // 2 stopwatches with pretty similar names -_-
                      Stopwatch stopwatch = new Stopwatch();
                      stopwatch.Start();
                      Stopwatch stopwatchPositions = new Stopwatch();
@@ -1009,6 +818,8 @@ namespace UniJoy
 
                      for (int i = 0; i < currentTrialTrajectoriesSize; i++)
                      {
+                         // why /100?
+                         
                          surge[i] = _currentTrialTrajectories.Item1[i].X / 100.0;
                          lateral[i] = _currentTrialTrajectories.Item1[i].Y / 100.0;
                          heave[i] = _currentTrialTrajectories.Item1[i].Z + MOTION_BASE_CENTER;
@@ -1024,7 +835,7 @@ namespace UniJoy
                      for (int i = 0; i < currentTrialTrajectoriesSize; i++)
                      {
                          //start = stopwatchPositions.ElapsedMilliseconds;
-                         /// two times because of specificity of moog
+                         // two times because of specificity of moog
                          MoogController.MoogController.SendPosition(surge[i], heave[i], lateral[i], rx[i], ry[i], rz[i]);
                          MoogController.MoogController.SendPosition(surge[i], heave[i], lateral[i], rx[i], ry[i], rz[i]);
                          //sumTimeSendPositions += stopwatchPositions.ElapsedMilliseconds - start;
@@ -1039,29 +850,28 @@ namespace UniJoy
                      _logger.Info("Sending to MOOG forward movement Task --end"); // ~(Michael Saar)~
                  });
                  //});
-            }
+                 
+                 _trialEventRealTiming.Add("RobotEndMovingForward", _controlLoopTrialTimer.ElapsedMilliseconds);
+                 
+                 return true;
+            /*}*/
             
 
             //throw new Exception();
 
             //write alpha omega that the stimulus start.
-            Task.Run(() =>
+            /*Task.Run(() =>
             {
                 WriteEventWriterStimulusBegin();
                 _trialEventRealTiming.Add("StimulusStart", _controlLoopTrialTimer.ElapsedMilliseconds);
-            });
+            });*/
 
             //execute the leds command if necessary.
-            if (_currentTrialStimulusType == 2 ||
+            /*if (_currentTrialStimulusType == 2 ||
                 _currentTrialStimulusType == 3 ||
                 _currentTrialStimulusType == 4 ||
                 _currentTrialStimulusType == 5)
             {
-                //TODO:DELETE
-                /*Task.Run(() =>
-                {
-                    ExecuteLedControllersCommand();
-                });*/
 
                 //TODO: Maayan - call the unity visualization
                 /*Task.Run(() =>
@@ -1071,50 +881,50 @@ namespace UniJoy
                         SendOculusFrame(currentTrialTrajectory.Unity);
                         Position++;
                     }
-                );*/
+                );#1#
                 Task.Run(() =>
                 {
                     //---data to send to the unity program (server)---
                     /*string msgToSend = "Space";
                     string jsonMsgToSend = JsonConvert.SerializeObject(msgToSend.ToArray());
                     TCPSender.SendString(jsonMsgToSend);
-                    TCPSender.SendMovement(_currentTrialTrajectories.Item1);*/
+                    TCPSender.SendMovement(_currentTrialTrajectories.Item1);#1#
 
                     _unityCommandsSender.TrySendCommand(UnityEngineCommands.VisualOperationCommand , VisualOperationCommand.StartRender);
                 });
-            }
+            }*/
 
             //wait the robot task to finish the movement.
-            if (_currentTrialStimulusType != 0)
+            /*if (_currentTrialStimulusType != 0)
             {
                 // log the _robotMotionTask Thread id // ~(Michael Saar)~
                 //_logger.Info("Waiting for _robotMotionTask to finish the movement." + "_robotMotionTask Thread id: " + _robotMotionTask.Id); // ~(Michael Saar)~
                 //_robotMotionTask.Wait();
                 _logger.Info("_robotMotionTask finished the movement.");
-            }
+            }*/
             //TODOO: ADD THE SAME WAIT FOR THE VISUAL
 
             //TODOO:DELETE
             //also send the AlphaOmega that motion forward ends.
             //TODOO: Do I need this?
             //_alphaOmegaEventsWriter.WriteEvent(true, AlphaOmegaEvent.RobotEndMovingForward);
-            _trialEventRealTiming.Add("RobotEndMovingForward", _controlLoopTrialTimer.ElapsedMilliseconds);
+            /*_trialEventRealTiming.Add("RobotEndMovingForward", _controlLoopTrialTimer.ElapsedMilliseconds);
 
             //TODOO:DELETE
             //_logger.Info("End MovingTheRobotDurationWithHeadCenterStabilityStage with AutoFixation = " + AutoFixation + ".");
             //return the true state of the heading in the center stability during the duration time or always true when AutoFixation.
             //return headInCenterAllTheTime;
-            return true;
+            return true;*/
         }
 
         /// <summary>
         /// Wait for the subject to press the start button in order to start the movement.
         /// </summary>
         /// <returns>True if the subject pressed on the start button during the limit of the timeoutTime.</returns>
-        //public bool WaitForHeadEnteranceToTheCenterStage()
+        //public bool WaitForHeadEntranceToTheCenterStage()
         public bool WaitForStartButtonToBePressed()
         {
-            //Sounds the start beep. Now waiting for the subject to press start button
+            //Start beep. Now waiting for the subject to press start button
             AudioResponse.PlayStartTrialSound();
 
             //TODOO: Do I need this?
@@ -1124,20 +934,20 @@ namespace UniJoy
 
             _logger.Info("Waiting for start button to be pressed.");
 
-#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
+/*#if UPDATE_GLOBAL_DETAILS_LIST_VIEW
             //update the global details listview with the current stage.
             _mainGuiInterfaceControlsDictionary["UpdateGlobalExperimentDetailsListView"].BeginInvoke(
             _mainGuiControlsDelegatesDictionary["UpdateGlobalExperimentDetailsListView"], "Current Stage", "Waiting for rat to start trial");
-#endif
+#endif*/
 
             //if autoStart is checked than should not wait for the subject to press start for starting.
-            _autosOptionsInRealTime.AutoStart = AutoStart;
+            /*_autosOptionsInRealTime.AutoStart = AutoStart;
             if (AutoStart)
             {
                 _logger.Info("AutoStart is On so no wait.");
 
                 return true;
-            }
+            }*/
 
             //stopwatch for the start button response timeout.
             Stopwatch sw = new Stopwatch();
@@ -1148,7 +958,7 @@ namespace UniJoy
             {
                 if (_remoteController.IsStartButtonPressed())
                 {
-                    _trialEventRealTiming.Add("HeadEnterCenter", _controlLoopTrialTimer.ElapsedMilliseconds);
+                    /*_trialEventRealTiming.Add("HeadEnterCenter", _controlLoopTrialTimer.ElapsedMilliseconds);*/
 
                     return true;
                 }
@@ -1240,8 +1050,8 @@ namespace UniJoy
             }
 
             //save the data into the result file only if the trial is within success trials (that have any stimulus)
-            if (!_currentRatDecision.Equals(RatDecison.NoEntryToResponseStage))
-            {
+            /*if (!_currentRatDecision.Equals(RatDecision.NoEntryToResponseStage))
+            {*/
                 Task.Run(() =>
                 {
                     _logger.Info("Saving trial# " + (_totalHeadStabilityInCenterDuringDurationTime + _totalHeadFixationBreaks) + " to the result file.");
@@ -1253,7 +1063,7 @@ namespace UniJoy
                         TrialEventsTiming = _trialEventRealTiming
                     });
                 });
-            }
+            /*}*/
 
             _logger.Info("before post trial (int)(_currentTrialTimings.wPostTrialTime * 1000) sleep."); // ~(Michael Saar)~
             Thread.Sleep((int)(_currentTrialTimings.wPostTrialTime * 1000));
@@ -1276,7 +1086,7 @@ namespace UniJoy
         #endregion STAGES_FUNCTION
 
         #region STAGES_ADDIION_FUNCTION
-        /// <summary>
+        /*/// <summary>
         /// Writing the stimulus type to the AlphaOmega according to the current stimulus type.
         /// </summary>
         private void WriteEventWriterStimulusBegin()
@@ -1303,7 +1113,7 @@ namespace UniJoy
                 default://if there is no motion , make a delay of waiting the duration time (the time that should take the robot to move).
                     break;
             }
-        }
+        }*/
 
         //TODOO: Maayan - determine whether the subject answer was correct
         /// <summary>
@@ -1445,7 +1255,7 @@ namespace UniJoy
             //#endif
         }
 
-        public void TryConnectToUnityEngine()
+        /*public void TryConnectToUnityEngine()
         {
             int numOfRetries = 0;
 
@@ -1459,8 +1269,8 @@ namespace UniJoy
 
                 numOfRetries++;
             }
-            */
-        }
+            #1#
+        }*/
 
         /*/// <summary>
         /// Load all mp3 files that the MediaPlayer object should use.
@@ -1616,54 +1426,10 @@ namespace UniJoy
         private void NullFunction()
         {
         }
-
-        /// <summary>
-        /// Update the robot trajectory JBI file to it's home (origin) position.
-        /// </summary>
-        public void UpdateRobotHomePositionBackwordsJBIFile()
-        {
-            switch (_currentTrialStimulusType)
-            {
-                case 0://none
-                    break;
-                case 1://vistibular only.
-                    //TODOO: Do I need this?
-                    //_motomanController.UpdateYasakawaRobotJBIFile(_currentTrialTrajectories, MotomanProtocolFileCreator.UpdateJobType.Both, true);
-                    break;
-
-                case 2://visual only.
-                case 10://visual only in the dark.
-                case 12://will replace visual only in the dark.
-                    //TODOO: Do I need this?
-                    //_motomanController.UpdateYasakawaRobotJBIFile(_currentTrialTrajectories, MotomanProtocolFileCreator.UpdateJobType.R2Only, true);
-                    break;
-
-                case 3://vistibular and visual both.
-                case 11://vistibular and visual both in the dark.
-                case 13://will replace vistibular and visual both in the dark.
-                    //TODOO: Do I need this?
-                    //_motomanController.UpdateYasakawaRobotJBIFile(_currentTrialTrajectories, MotomanProtocolFileCreator.UpdateJobType.R1Only, true);
-                    break;
-
-                case 4://vistibular and visual both with +delta for visual.
-                case 5://vistibular and visual both with -delta for visual.
-                case 14://vistibular and visual both with +delta for visual in the dark.
-                case 15://vistibular and visual both with -delta for visual in the dark.
-                    //move only R1 if delta is 0
-                    double deltaHeading = 0;
-                    if (_staticVariablesList.ContainsKey("DELTA"))
-                        deltaHeading = _staticVariablesList["DELTA"][0];
-                    else if (_crossVaryingVals[_currentVaryingTrialIndex].Keys.Contains("DELTA"))
-                        deltaHeading = _crossVaryingVals[_currentVaryingTrialIndex]["DELTA"];
-                    //TODOO: Do I need this?
-                    //_motomanController.UpdateYasakawaRobotJBIFile(_currentTrialTrajectories, (deltaHeading != 0) ? MotomanProtocolFileCreator.UpdateJobType.Both : MotomanProtocolFileCreator.UpdateJobType.R1Only, true);
-                    break;
-
-                default://if there is no motion , make a delay of waiting the duration time (the time that should take the robot to move).
-                    break;
-            }
-        }
+        
         #endregion ADDITIONAL_FUNCTIONS
+        
+        #endregion FUNCTIONS
 
         #region STRUCT_ENUMS
         /// <summary>
@@ -1721,7 +1487,7 @@ namespace UniJoy
         public enum RatDecison
         {
             /// <summary>
-            /// The rat decision could not happened due to no enterance to the reponse stage (because no stability or enterance to the center).
+            /// The rat decision could not happened due to no entrance to the response stage (because no stability or entrance to the center).
             /// </summary>
             NoEntryToResponseStage = -1,
 
@@ -1766,29 +1532,9 @@ namespace UniJoy
             DurationTime = 6
         };
 
-        /// <summary>
-        /// Enum for the reward poition/direction.
-        /// </summary>
-        public enum RewardPosition
-        {
-            /// <summary>
-            /// Reward to the center.
-            /// </summary>
-            Center = 0x02,
-
-            /// <summary>
-            /// Reward to the left.
-            /// </summary>
-            Left = 0x01,
-
-            /// <summary>
-            /// Reward to the right.
-            /// </summary>
-            Right = 0x04,
-        };
         #endregion STRUCT_ENUMS
 
 
-        #endregion FUNCTIONS
+        
     }
 }

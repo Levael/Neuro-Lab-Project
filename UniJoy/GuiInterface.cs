@@ -26,7 +26,7 @@ namespace UniJoy
         /// <summary>
         /// The selected protocols path to view protocols.
         /// </summary>
-        private string _protoclsDirPath;
+        private string _protocolsDirPath;
 
         /// <summary>
         /// The variables read from the xlsx protocol file.
@@ -122,7 +122,7 @@ namespace UniJoy
             _acrossVectorValuesGenerator = DecideVaryinVectorsGeneratorByProtocolName();
             _staticValuesGenerator = new StaticValuesGenerator();
             InitializeTitleLabels();
-            ShowVaryingControlsOptions(false);
+            ShowVaryingControlsOptions(show: false);
 
             InitializeCheckBoxesDictionary();
 
@@ -606,9 +606,9 @@ namespace UniJoy
         {
             if (_protocolsFolderBrowser.ShowDialog() == DialogResult.OK)
             {
-                _protoclsDirPath = _protocolsFolderBrowser.SelectedPath;
+                _protocolsDirPath = _protocolsFolderBrowser.SelectedPath;
                 _protocolsComboBox.Items.Clear();
-                AddFilesToComboBox(_protocolsComboBox, _protoclsDirPath);
+                AddFilesToComboBox(_protocolsComboBox, _protocolsDirPath);
             }
         }
 
@@ -626,7 +626,7 @@ namespace UniJoy
 
             //_protocolsComboBox.SelectedItem = _selectedProtocolFullName;
             //_protocolsComboBox.SelectedItem = _protocolsComboBox.Items[0];
-            SetVariables(_protoclsDirPath + "\\" + _selectedProtocolFullName);
+            SetVariables(_protocolsDirPath + "\\" + _selectedProtocolFullName);
             ShowVariablesToGui();
         }
 
@@ -635,8 +635,8 @@ namespace UniJoy
         /// </summary>
         public void SetDefaultProtocolFileBrowserDirectory()
         {
-            _protoclsDirPath = this._protocolsFolderBrowser.SelectedPath;
-            AddFilesToComboBox(_protocolsComboBox, _protoclsDirPath);
+            _protocolsDirPath = this._protocolsFolderBrowser.SelectedPath;
+            AddFilesToComboBox(_protocolsComboBox, _protocolsDirPath);
         }
 
         /// <summary>
@@ -661,7 +661,7 @@ namespace UniJoy
             if (_protocolsComboBox.Items.Count > 0)
             {
                 _protocolsComboBox.SelectedItem = _protocolsComboBox.Items[0];
-                SetVariables(_protoclsDirPath + "\\" + _protocolsComboBox.Items[0].ToString());
+                SetVariables(_protocolsDirPath + "\\" + _protocolsComboBox.Items[0].ToString());
                 //that was deleted because it show the variables already in the two lines before.
                 //ShowVariablesToGui();
             }
@@ -682,7 +682,7 @@ namespace UniJoy
         /// <param name="e">The args.</param>
         private void _btnSaveProtocol_Click(object sender, EventArgs e)
         {
-            _excelLoader.WriteProtocolFile(_protoclsDirPath + @"\" + _textboxNewProtocolName.Text.ToString(), _variablesList, _buttonbasesDictionary);
+            _excelLoader.WriteProtocolFile(_protocolsDirPath + @"\" + _textboxNewProtocolName.Text.ToString(), _variablesList, _buttonbasesDictionary);
         }
         #endregion PROTOCOL_GROUPBOX_FUNCTION
         
@@ -704,10 +704,7 @@ namespace UniJoy
                     _btnStart.Enabled = false;
                     _btnMakeTrials.Enabled = false;
                     _btnStop.Enabled = true;
-                    /*_btnPause.Enabled = true;
-                    _btnResume.Enabled = false;*/
                     _btnPark.Enabled = false;
-                    /*_btnMoveRobotSide.Enabled = false;*/
                     #endregion
 
 
@@ -720,19 +717,9 @@ namespace UniJoy
                         //add the static variable list of double type values.
                         _staticValuesGenerator.SetVariables(_variablesList);
 
-                        //start the control loop.
-                        //need to be changed according to parameters added to which trajectoryname to be called from the excel file.
-                        //string trajectoryCreatorName = _variablesList._variablesDictionary["TRAJECTORY_CREATOR"]._description["parameters"]._MoogParameter[0].ToString();
-                        //int trajectoryCreatorNum = int.Parse(_variablesList._variablesDictionary["TRAJECTORY_CREATOR"]._description["parameters"]._MoogParameter);
                         ITrajectoryCreator trajectoryCreator = DecideTrajectoryCreatorByProtocolName(_selectedProtocolName);
 
-                        _cntrlLoop.NumOfRepetitions = int.Parse(_numOfRepetitionsTextBox.Text.ToString());
-                        /*_cntrlLoop.NumOfStickOn = int.Parse(_textboxStickOnNumber.Text.ToString());*/
-                        //_cntrlLoop.PercentageOfTurnedOnLeds = double.Parse(_textboxPercentageOfTurnOnLeds.Text.ToString());
-                        //_cntrlLoop.LEDBrightness = int.Parse(_textboxLEDBrightness.Text.ToString());
-                        //_cntrlLoop.LEDcolorRed = int.Parse(_textBoxLedRedColor.Text.ToString());
-                        //_cntrlLoop.LEDcolorGreen = int.Parse(_textBoxLedGreenColor.Text.ToString());
-                        //_cntrlLoop.LEDcolorBlue = int.Parse(_textBoxLedBlueColor.Text.ToString());
+                        _cntrlLoop.NumOfRepetitions = int.Parse(_numOfRepetitionsTextBox.Text);
                         _cntrlLoop.ProtocolFullName = _selectedProtocolFullName.Split('.')[0];//delete the.xlsx extension from the protocol file name.
                         _cntrlLoop.Start(_variablesList, _acrossVectorValuesGenerator._crossVaryingValsBoth, _staticValuesGenerator._staticVariableList, Properties.Settings.Default.Frequency, trajectoryCreator);
                     }
@@ -744,27 +731,6 @@ namespace UniJoy
         /// Check all parameters needed before the control loop execution.
         /// </summary>
         /// <returns>True or false if can execute the control loop.</returns>
-        /*private bool StartLoopStartCheck()
-        {
-            //if selected rat name is o.k
-            /*if (_comboBoxSelectedRatName.SelectedItem != null && _comboBoxStudentName.SelectedItem != null)
-            {
-            }
-            else
-            {
-                MessageBox.Show("Error - Should select a rat name before starting!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }#1#
-
-            if (int.Parse(_numOfRepetitionsTextBox.Text.ToString()) % int.Parse(_textboxStickOnNumber.Text.ToString()) != 0)
-            {
-                MessageBox.Show("Error - StickOn number should devide Num Of Repetitions!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            return true;
-        }*/
-
         private bool IsReadyToStart()
         {
             if (!_isEngaged) {
@@ -810,7 +776,7 @@ namespace UniJoy
             AddVaryingMatrixToVaryingListBox(_acrossVectorValuesGenerator._crossVaryingValsBoth);
 
             //show the list box controls(add , remove , etc...)
-            ShowVaryingControlsOptions(true);
+            ShowVaryingControlsOptions(show: true);
 
             //show the start button
             _btnStart.Enabled = true;
@@ -892,6 +858,7 @@ namespace UniJoy
         /// <param name="e">Args.</param>
         private void _btnPark_Click(object sender, EventArgs e)
         {
+            // WHAT THE **** IS IT
             lock (_lockerPauseResumeButton)
             {
                 lock (_lockerPauseResumeButton)
@@ -1362,110 +1329,8 @@ namespace UniJoy
         }
         #endregion VARYING_LISTBOX_FUNCTIONS
 
-        #region HAND_REWARD_CONTROLL_FUNCTION
-        /// <summary>
-        /// Handler for digital hand reward button clicked.
-        /// </summary>
-        /// <param name="sender">The button.</param>
-        /// <param name="e">Args.</param>
-        /*private void _digitalHandRewardButton_Click(object sender, EventArgs e)
-        {
-            Task.Run(() =>
-            {
-                _cntrlLoop.GiveRewardHandReward(_selectedHandRewardDirections, false);
-            });
-        }*/
-
-        /// <summary>
-        /// Handler for the continious hand reward releasing (when release the button - should stop the selected reward due to the clicked).
-        /// </summary>
-        /// <param name="sender">The button.</param>
-        /// <param name="e">Args.</param>
-        /*private void _continiousHandRewardKeyReleaed(object sender, MouseEventArgs e)
-        {
-            _cntrlLoop.GiveRewardHandReward(0, true);
-        }*/
-
-        /// <summary>
-        /// Handler for the continious hand reward clicking (when release the button - should stop the given reward due to the clicked that opened the selected REWARD).
-        /// </summary>
-        /// <param name="sender">The buutton.</param>
-        /// <param name="e">Args.</param>
-        /*private void _countiniousHandRewardKeyDown(object sender, MouseEventArgs e)
-        {
-            _cntrlLoop.GiveRewardHandReward(_selectedHandRewardDirections, true);
-        }*/
-
-        /// <summary>
-        /// Handler for changing the state of the left reward direction.
-        /// </summary>
-        /// <param name="sender">The checbox.</param>
-        /// <param name="e">Args.</param>
-        /*private void _leftHandRewardCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBox leftCheckBox = sender as CheckBox;
-
-            if (leftCheckBox.Checked)
-            {
-                //| operator with 0000_0001
-                _selectedHandRewardDirections |= 1;
-            }
-
-            else
-            {
-                //& operator with 0000_0100
-                _selectedHandRewardDirections &= 4;
-            }
-        }*/
-
-        /// <summary>
-        /// Handler for changing the state of the center reward direction.
-        /// </summary>
-        /// <param name="sender">The checkbox.</param>
-        /// <param name="e">Args.</param>
-        /*private void _centerHandRewardCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBox centerheckBox = sender as CheckBox;
-
-            if (centerheckBox.Checked)
-            {
-                //| operator with 0000_0010
-                _selectedHandRewardDirections |= 2;
-            }
-
-            else
-            {
-                //& operator with 0000_0101
-                _selectedHandRewardDirections &= 5;
-            }
-        }*/
-
-        /// <summary>
-        /// Handler for changing the state of the right reward direction.
-        /// </summary>
-        /// <param name="sender">The checkbox.</param>
-        /// <param name="e">Args.</param>
-        /*private void _rightHandRewardCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBox rightCheckBox = sender as CheckBox;
-
-            if (rightCheckBox.Checked)
-            {
-                //| operator with 0000_0100
-                _selectedHandRewardDirections |= 4;
-            }
-
-            else
-            {
-                //& operator with 0000_0011
-                _selectedHandRewardDirections &= 3;
-            }
-
-        }*/
-        #endregion HAND_REWARD_CONTROLL_FUNCTION
-
         #region AUTOS
-        /// <summary>
+        /*/// <summary>
         /// Event for changing the AutoStart status.
         /// </summary>
         /// <param name="sender">The checkbox.</param>
@@ -1475,9 +1340,9 @@ namespace UniJoy
             //todo::we need to activate it again.
             /*if (_checkBoxAutoStart.Checked)
                 _cntrlLoop.AutoStart = true;
-            else*/
+            else#1#
                 _cntrlLoop.AutoStart = false;
-        }
+        }*/
         #endregion AUTOS
 
         #region MODES
@@ -1893,7 +1758,7 @@ namespace UniJoy
         }
 
         /// <summary>
-        /// Initalize the title labels with their text and add them to the controls.
+        /// Initialize the title labels with their text and add them to the controls.
         /// </summary>
         private void InitializeTitleLabels()
         {
@@ -1969,7 +1834,7 @@ namespace UniJoy
             return sBuilder.ToString();
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Split [x][y]... to list of {x, y, ...}
         /// </summary>
         /// <param name="value">The string to be splitted.</param>
@@ -1990,9 +1855,9 @@ namespace UniJoy
 
             //return the splitted list.
             return splittedList;
-        }
+        }*/
 
-        /// <summary>
+        /*/// <summary>
         /// Converts a list of strings to a list of doubles.
         /// </summary>
         /// <param name="strList">The string list.</param>
@@ -2010,14 +1875,14 @@ namespace UniJoy
 
             //return the converted list.
             return doubleList;
-        }
+        }*/
 
         /// <summary>
         /// Creates a string for the gui with 3 steps.
         /// </summary>
         /// <param name="sBuilder">The string writer.</param>
         /// <param name="lowPart">The low bound.</param>
-        /// <param name="increasingPart">Increament.</param>
+        /// <param name="increasingPart">Increment.</param>
         /// <param name="highPart">The high bound.</param>
         /// <returns>The string to the gui by [low:inc:high].</returns>
         private string ThreeStagesRepresentation(StringBuilder sBuilder, string lowPart, string increasingPart, string highPart)
@@ -2170,7 +2035,7 @@ namespace UniJoy
             int y1 = str.Split(' ').Count();
             if (str.Where(x => (x < '0' || x > '9') && x != ' ' && x != '-' && x != '.').Count() > 0)
             {
-                MessageBox.Show("Warnning : Vector can include onlt scalar and spaces.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Warnning : Vector can include only scalar and spaces.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 return false;
             }
@@ -2318,33 +2183,7 @@ namespace UniJoy
         }
         #endregion
 
-        #region HandSounds
-        /// <summary>special
-        /// Handler for clicking to play the CenterRewardSound.
-        /// </summary>
-        /// <param name="sender">The bottun.</param>
-        /// <param name="e">The args.</param>
-        /*private void _btnRewardSound_Click(object sender, EventArgs e)
-        {
-            Task.Run(() =>
-            {
-                _cntrlLoop.PlayRewardSound();
-            });
-        }*/
-
-        /// <summary>
-        /// Handler for clicking to play the BreakFixation.
-        /// </summary>
-        /// <param name="sender">The bottun.</param>
-        /// <param name="e">The args.</param>
-        /*private void _btnBreakFixationSound_Click(object sender, EventArgs e)
-        {
-            Task.Run(() =>
-            {
-                _cntrlLoop.PlayBreakFixationSound();
-            });
-        }*/
-        #endregion HandSounds
+        
 
         private void _dynamicParametersPanel_Paint(object sender, PaintEventArgs e)
         {
@@ -2372,6 +2211,7 @@ namespace UniJoy
         }
 
         /// <summary>
+        //
         /// The index in the varying cross vals list to be referenced to.
         /// </summary>
         public int _listIndex
@@ -2380,35 +2220,5 @@ namespace UniJoy
             set;
         }
     }
-
-    /// <summary>
-    /// Enum describes the system states.
-    /// </summary>
-    public enum SystemState
-    {
-        /// <summary>
-        /// The system is running now.
-        /// </summary>
-        RUNNING = 0,
-
-        /// <summary>
-        /// The system has been stopped by the user.
-        /// </summary>
-        STOPPED = 1,
-
-        /// <summary>
-        /// The system has been paused by the user.
-        /// </summary>
-        PAUSED = 2,
-
-        /// <summary>
-        /// The system is now warmed up.
-        /// </summary>
-        INITIALIZED = 4,
-
-        /// <summary>
-        /// The current experiment (all trials) over , waiting for the next command.
-        /// </summary>
-        FINISHED = 5
-    }
+    
 }
