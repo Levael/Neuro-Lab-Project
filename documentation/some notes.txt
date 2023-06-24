@@ -1,22 +1,13 @@
 ﻿Some thoughts about the project:
-
-
-Option 1: rewrite everything for Arduino (upd: nooo)
-- input:  computer (instructions),  controller
-- output: computer (recieved data), ocolus, moog, speakers
-
-Arduino connects a computer to those 4 devices and responsible for hardware only (maybe instructions for moog too).
-It's like a game: start game on PC, keyboard/controller are inputs, oculus/speakers are outputs.
-I suppose it is possible to run simulation and c# project at the same time.
-
-To learn: C#, Unity, Arduino?
-
 ==============================================================================================================================
 
 Ideas for future:
 - save every experiment in it's own separate folder: input instructions, answers, video, time (start/end/whole)
-- add intercome (computer input to arduino output)
-
+- add tabs:
+  "experiment" (main part)
+  "debug" (data from moog, oculus, all timings, log files etc)
+  "data" (all data that was collected, links to files and options to compress to archive and export)
+  
 ==============================================================================================================================
 Some notes about MOOG:
 
