@@ -7,15 +7,18 @@ Ideas for future:
   "experiment" (main part)
   "debug" (data from moog, oculus, all timings, log files etc)
   "data" (all data that was collected, links to files and options to compress to archive and export)
-  
+- more tables tabs:
+  main params (directioon length, heading angles etc), deep settings (like sigma, fps, staircase params etc)
+  or  
+  moog (vestibelar) params, oculus/unity (visual) params, audio params etc
 ==============================================================================================================================
 Some notes about MOOG:
 
 1) 103 may be usefull with long distances:
-Length Command Mode Data packet 		101: start position is defined by the Actuator Lengths specified in the packet.
-DOF Command Mode Data packet 			100: start position is defined by the DOF Commands specified in the packet.
+Length Command Mode Data packet 		    101: start position is defined by the Actuator Lengths specified in the packet.
+DOF Command Mode Data packet 			      100: start position is defined by the DOF Commands specified in the packet.
 Motion-Cueing Command Mode Data packet 	102: start position is at mid-Heave.
-Playback Command Mode Data packet 		103: start position is the first position found in the playback file.
+Playback Command Mode Data packet 		  103: start position is the first position found in the playback file.
 
 2) Pages 44-49 of "CDS7330 INTERFACE DEFINITION MANUAL.pdf" are about errors
 3) Pages 43-47 of "6DOF2000E Real Time Ethernet Interface Definition - CDS7237.pdf" are about Running the motion base algorithm
@@ -35,9 +38,9 @@ Software limits for DOF:
 
 DOF orientations of '+': (orientations are defined from the perspective of a rider seated on the base facing forward)
 
-roll 	= clockwise
-pitch 	= front edge of platform moves up
-heave 	= down
-surge 	= forward
-yaw 	= clockwise (from above)
-lateral = right
+- roll 	  = clockwise
+- pitch 	= front edge of platform moves up
+- heave 	= down
+- surge 	= forward
+- yaw 	  = clockwise (from above)
+- lateral = right
